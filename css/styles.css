@@ -469,7 +469,7 @@ textarea:focus-visible {
   height: 50px;
   border-radius: 50%;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: background 0.3s, border-color 0.3s;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -499,7 +499,7 @@ textarea:focus-visible {
   border: none;
   background: rgba(255, 255, 255, 0.3);
   cursor: pointer;
-  transition: all 0.35s;
+  transition: background 0.35s, width 0.35s, border-radius 0.35s;
   padding: 0;
 }
 
@@ -956,7 +956,7 @@ textarea:focus-visible {
    ============================================= */
 .color-bar {
   height: 3px;
-  background: linear-gradient(90deg, var(--blue), var(--teal), #5cb85c, var(--gold), var(--coral));
+  background: linear-gradient(90deg, var(--blue), var(--teal), var(--teal), var(--gold), var(--coral));
 }
 
 /* =============================================
@@ -1238,7 +1238,7 @@ textarea:focus-visible {
   font-family: var(--font-body);
   font-size: 0.92rem;
   padding: 0.75rem 1.2rem;
-  border: 1px solid #ddd;
+  border: 1px solid var(--mid-gray);
   border-radius: 8px;
   background: var(--white);
   outline: none;
@@ -1569,7 +1569,7 @@ textarea:focus-visible {
 .form-group select {
   width: 100%;
   padding: 0.75rem 1rem;
-  border: 1px solid #ddd;
+  border: 1px solid var(--mid-gray);
   border-radius: 6px;
   font-family: var(--font-body);
   font-size: 0.92rem;
@@ -1676,7 +1676,7 @@ textarea:focus-visible {
   z-index: 10000;
   padding: 0.5rem 1rem;
   background: var(--charcoal);
-  color: #fff;
+  color: var(--white);
   border-radius: 4px;
   font-family: var(--font-body);
   font-size: 0.875rem;
@@ -1722,7 +1722,7 @@ textarea:focus-visible {
   right: 1rem;
   background: none;
   border: none;
-  color: #fff;
+  color: var(--white);
   font-size: 2rem;
   cursor: pointer;
   line-height: 1;
@@ -1797,7 +1797,7 @@ textarea:focus-visible {
 /* ===== FORM FEEDBACK ===== */
 .form-success {
   background: var(--teal);
-  color: #fff;
+  color: var(--white);
   padding: 1rem 1.25rem;
   border-radius: 6px;
   font-family: var(--font-body);
@@ -1877,7 +1877,7 @@ textarea:focus-visible {
   .nav-links {
     position: fixed;
     top: 0;
-    right: -100%;
+    right: 0;
     width: 300px;
     height: 100vh;
     height: 100dvh;
@@ -1886,12 +1886,13 @@ textarea:focus-visible {
     align-items: flex-start;
     padding: 6rem 2rem 2rem;
     gap: 0.25rem;
-    transition: right 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
     box-shadow: -12px 0 40px rgba(0, 0, 0, 0.4);
   }
 
   .nav-links.open {
-    right: 0;
+    transform: translateX(0);
   }
 
   .nav-link,

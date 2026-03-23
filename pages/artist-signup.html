@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contact — Kay's Originals</title>
+  <title>Artist Sign Up — Kay's Originals</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/styles.css">
   <link rel="icon" href="../images/favicon.png" type="image/png">
-  <meta name="description" content="Get in touch with Kay's Originals gallery in Austin, TX. Send us a message, visit us, or give us a call.">
-  <meta property="og:title" content="Contact — Kay's Originals">
-  <meta property="og:description" content="Get in touch with Kay's Originals gallery in Austin, TX. Send us a message, visit us, or give us a call.">
+  <meta name="description" content="Apply to show your artwork at Kay's Originals gallery in Austin, TX. Submit your artist profile and portfolio for review.">
+  <meta property="og:title" content="Artist Sign Up — Kay's Originals">
+  <meta property="og:description" content="Apply to show your artwork at Kay's Originals gallery in Austin, TX.">
   <meta property="og:image" content="../images/KaysOrigLogo.png">
   <meta property="og:type" content="website">
 </head>
-<body data-page="contact">
+<body data-page="artist-signup">
   <a href="#main-content" class="skip-link">Skip to main content</a>
 
   <!-- ===== COLOR BAR & NAV ===== -->
@@ -40,71 +40,85 @@
   </nav>
 
   <main id="main-content">
+
   <!-- ===== PAGE HEADER ===== -->
   <section class="page-hero">
     <div class="section-inner">
-      <h1>Contact Us</h1>
-      <p class="hero-subtitle">Have a question or want to learn more? We'd love to hear from you.</p>
+      <span class="page-label">For Artists</span>
+      <h1>Artist Sign Up</h1>
+      <p class="hero-subtitle">Interested in showing your work at Kay's Originals? Fill out the form below and we'll be in touch.</p>
     </div>
   </section>
 
-  <!-- ===== CONTACT CONTENT ===== -->
+  <!-- ===== SIGN UP FORM ===== -->
   <section class="page-content">
     <div class="section-inner">
       <div class="contact-layout">
 
         <div class="contact-form">
-          <h2>Send a Message</h2>
-          <p style="font-size: 0.92rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
-            Looking to show your work at our gallery? <a href="artist-signup.html" style="color: var(--blue); font-weight: 500;">Apply here</a>
-          </p>
-          <form id="contactForm">
+          <h2>Your Information</h2>
+          <form id="artistSignupForm">
+
             <div class="form-group">
-              <label for="contactName">Name</label>
-              <input type="text" id="contactName" name="name" required placeholder="Your full name">
+              <label for="artistName">Full Name</label>
+              <input type="text" id="artistName" name="name" required placeholder="Your full name">
             </div>
+
             <div class="form-group">
-              <label for="contactEmail">Email</label>
-              <input type="email" id="contactEmail" name="email" required placeholder="your@email.com">
+              <label for="artistEmail">Email</label>
+              <input type="email" id="artistEmail" name="email" required placeholder="your@email.com">
             </div>
+
             <div class="form-group">
-              <label for="contactSubject">Subject</label>
-              <select id="contactSubject" name="subject" required>
-                <option value="">Select a subject...</option>
-                <option value="general">General Inquiry</option>
-                <option value="artwork">Artwork Question</option>
+              <label for="artistPhone">Phone (optional)</label>
+              <input type="tel" id="artistPhone" name="phone" placeholder="(555) 000-0000">
+            </div>
+
+            <div class="form-group">
+              <label for="artistMedia">Primary Media</label>
+              <select id="artistMedia" name="media" required>
+                <option value="">Select a category...</option>
+                <option value="painting">Paintings</option>
+                <option value="sculpture">Sculptures</option>
+                <option value="sketch">Sketches</option>
+                <option value="mixed">Mixed Media</option>
               </select>
             </div>
+
             <div class="form-group">
-              <label for="contactMessage">Message</label>
-              <textarea id="contactMessage" name="message" rows="6" required placeholder="How can we help?"></textarea>
+              <label for="artistPortfolio">Portfolio or Website URL (optional)</label>
+              <input type="url" id="artistPortfolio" name="portfolio" placeholder="https://yourwebsite.com">
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-            <div id="formSuccess" class="form-success" style="display:none;">
-              <p>Thank you! Your message has been sent. We'll be in touch soon.</p>
+
+            <div class="form-group">
+              <label for="artistBio">Artist Statement</label>
+              <textarea id="artistBio" name="bio" rows="6" required placeholder="Tell us about your work, your background, and what drives your art."></textarea>
             </div>
+
+            <button type="submit" class="btn btn-primary">Submit Application</button>
+            <div id="signupSuccess" class="form-success" style="display:none;">
+              <p>Thank you for applying! We'll review your submission and reach out soon.</p>
+            </div>
+
           </form>
+          <p style="margin-top: 1rem; font-size: 0.92rem; color: var(--text-secondary);">
+            Already have an account? <a href="artist-login.html" style="color: var(--blue); font-weight: 500;">Sign in</a>
+          </p>
         </div>
 
         <div class="contact-info">
-          <h2>Gallery Information</h2>
+          <h2>What Happens Next</h2>
           <div class="info-block">
-            <h4>Email</h4>
-            <p><a href="mailto:info@kaysoriginals.com">info@kaysoriginals.com</a></p>
+            <h4>Review</h4>
+            <p>Our team reviews every application and looks for original work with a strong artistic voice.</p>
           </div>
           <div class="info-block">
-            <h4>Phone</h4>
-            <p><a href="tel:+15550123456">(555) 012-3456</a></p>
+            <h4>Response Time</h4>
+            <p>We aim to respond within 2–3 weeks of receiving your application.</p>
           </div>
           <div class="info-block">
-            <h4>Location</h4>
-            <p>Austin, TX</p>
-          </div>
-          <div class="info-block">
-            <h4>Gallery Hours</h4>
-            <p>Tuesday – Saturday: 10am – 6pm<br>
-               Sunday: 12pm – 5pm<br>
-               Monday: Closed</p>
+            <h4>Questions?</h4>
+            <p><a href="contact.html">Contact us</a> or read about our <a href="consignment.html">consignment process</a>.</p>
           </div>
         </div>
 

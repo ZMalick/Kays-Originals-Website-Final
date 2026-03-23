@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contact — Kay's Originals</title>
+  <title>Artist Login — Kay's Originals</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/styles.css">
   <link rel="icon" href="../images/favicon.png" type="image/png">
-  <meta name="description" content="Get in touch with Kay's Originals gallery in Austin, TX. Send us a message, visit us, or give us a call.">
-  <meta property="og:title" content="Contact — Kay's Originals">
-  <meta property="og:description" content="Get in touch with Kay's Originals gallery in Austin, TX. Send us a message, visit us, or give us a call.">
+  <meta name="description" content="Sign in to your artist dashboard at Kay's Originals gallery.">
+  <meta property="og:title" content="Artist Login — Kay's Originals">
+  <meta property="og:description" content="Sign in to your artist dashboard at Kay's Originals gallery.">
   <meta property="og:image" content="../images/KaysOrigLogo.png">
   <meta property="og:type" content="website">
 </head>
-<body data-page="contact">
+<body data-page="artist-login">
   <a href="#main-content" class="skip-link">Skip to main content</a>
 
   <!-- ===== COLOR BAR & NAV ===== -->
@@ -40,72 +40,57 @@
   </nav>
 
   <main id="main-content">
+
   <!-- ===== PAGE HEADER ===== -->
   <section class="page-hero">
     <div class="section-inner">
-      <h1>Contact Us</h1>
-      <p class="hero-subtitle">Have a question or want to learn more? We'd love to hear from you.</p>
+      <span class="page-label">For Artists</span>
+      <h1>Artist Login</h1>
+      <p class="hero-subtitle">Access your artist dashboard at Kay's Originals.</p>
     </div>
   </section>
 
-  <!-- ===== CONTACT CONTENT ===== -->
+  <!-- ===== LOGIN FORM ===== -->
   <section class="page-content">
     <div class="section-inner">
-      <div class="contact-layout">
+      <div style="max-width: 460px; margin: 0 auto;">
 
         <div class="contact-form">
-          <h2>Send a Message</h2>
-          <p style="font-size: 0.92rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
-            Looking to show your work at our gallery? <a href="artist-signup.html" style="color: var(--blue); font-weight: 500;">Apply here</a>
-          </p>
-          <form id="contactForm">
-            <div class="form-group">
-              <label for="contactName">Name</label>
-              <input type="text" id="contactName" name="name" required placeholder="Your full name">
-            </div>
-            <div class="form-group">
-              <label for="contactEmail">Email</label>
-              <input type="email" id="contactEmail" name="email" required placeholder="your@email.com">
-            </div>
-            <div class="form-group">
-              <label for="contactSubject">Subject</label>
-              <select id="contactSubject" name="subject" required>
-                <option value="">Select a subject...</option>
-                <option value="general">General Inquiry</option>
-                <option value="artwork">Artwork Question</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="contactMessage">Message</label>
-              <textarea id="contactMessage" name="message" rows="6" required placeholder="How can we help?"></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-            <div id="formSuccess" class="form-success" style="display:none;">
-              <p>Thank you! Your message has been sent. We'll be in touch soon.</p>
-            </div>
-          </form>
-        </div>
+          <h2>Sign In</h2>
+          <form id="artistLoginForm">
 
-        <div class="contact-info">
-          <h2>Gallery Information</h2>
-          <div class="info-block">
-            <h4>Email</h4>
-            <p><a href="mailto:info@kaysoriginals.com">info@kaysoriginals.com</a></p>
-          </div>
-          <div class="info-block">
-            <h4>Phone</h4>
-            <p><a href="tel:+15550123456">(555) 012-3456</a></p>
-          </div>
-          <div class="info-block">
-            <h4>Location</h4>
-            <p>Austin, TX</p>
-          </div>
-          <div class="info-block">
-            <h4>Gallery Hours</h4>
-            <p>Tuesday – Saturday: 10am – 6pm<br>
-               Sunday: 12pm – 5pm<br>
-               Monday: Closed</p>
-          </div>
+            <div class="form-group">
+              <label for="loginEmail">Email</label>
+              <input type="email" id="loginEmail" name="email" required placeholder="your@email.com">
+            </div>
+
+            <div class="form-group">
+              <label for="loginPassword">Password</label>
+              <input type="password" id="loginPassword" name="password" required placeholder="Your password">
+            </div>
+
+            <div class="form-group" style="display: flex; align-items: center; gap: 0.5rem;">
+              <input type="checkbox" id="loginRemember" name="remember" style="width: auto;">
+              <label for="loginRemember" style="margin-bottom: 0; font-size: 0.88rem;">Remember me</label>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Sign In</button>
+
+            <div id="loginSuccess" class="form-success" style="display:none;">
+              <p>Signed in successfully. Redirecting to your dashboard...</p>
+            </div>
+
+          </form>
+
+          <p style="text-align: right; margin-top: 0.75rem;">
+            <a href="#" style="font-size: 0.85rem; color: var(--text-secondary);">Forgot password?</a>
+          </p>
+
+          <hr style="border: none; border-top: 1px solid var(--mid-gray); margin: 2rem 0;">
+
+          <p style="text-align: center; font-size: 0.92rem; color: var(--text-secondary);">
+            Don't have an account? <a href="artist-signup.html" style="color: var(--blue); font-weight: 500;">Apply here</a>
+          </p>
         </div>
 
       </div>
