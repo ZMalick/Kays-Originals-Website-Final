@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Artists — Kay's Originals</title>
+  <title>Exhibition — Kay's Originals</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/styles.css">
   <link rel="icon" href="../images/favicon.png" type="image/png">
-  <meta name="description" content="Meet the talented artists represented by Kay's Originals gallery.">
-  <meta property="og:title" content="Artists — Kay's Originals">
-  <meta property="og:description" content="Meet the talented artists represented by Kay's Originals gallery.">
+  <meta name="description" content="Exhibition details at Kay's Originals gallery.">
+  <meta property="og:title" content="Exhibition — Kay's Originals">
+  <meta property="og:description" content="Exhibition details at Kay's Originals gallery.">
   <meta property="og:image" content="../images/KaysOrigLogo.png">
   <meta property="og:type" content="website">
 </head>
-<body data-page="artists">
+<body data-page="exhibition">
   <a href="#main-content" class="skip-link">Skip to main content</a>
 
   <!-- ===== COLOR BAR & NAV ===== -->
@@ -24,7 +24,7 @@
     <div class="nav-inner">
       <a href="../index.html" class="nav-brand">
         <img src="../images/KaysOrigLogo.png" alt="Kay's Originals" class="nav-logo">
-        <span class="nav-slogan">Meet the Artists</span>
+        <span class="nav-slogan">Exhibition Detail</span>
       </a>
       <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
         <span></span><span></span><span></span>
@@ -48,40 +48,40 @@
   </nav>
 
   <main id="main-content">
-  <!-- ===== PAGE HEADER ===== -->
+  <!-- ===== BREADCRUMB ===== -->
   <section class="page-hero">
     <div class="section-inner">
-      <h1>Our Artists</h1>
+      <nav class="breadcrumb" aria-label="Breadcrumb">
+        <a href="exhibitions.html">Exhibitions</a>
+        <span>/</span>
+        <span id="breadcrumbTitle">Exhibition</span>
+      </nav>
+      <a href="exhibitions.html" class="btn btn-secondary back-btn">&larr; Back to Exhibitions</a>
+      <div id="exhibitionDetail">
+        <!-- Populated by JS -->
+      </div>
     </div>
   </section>
 
-  <!-- ===== ARTIST SEARCH + GRID ===== -->
-  <section class="page-content">
+  <!-- ===== EXHIBITION ARTWORK ===== -->
+  <section class="page-content" id="exhibitionArtwork" style="display:none;">
     <div class="section-inner">
-      <div class="artist-filter-row">
-        <select id="artistAlphaFilter" class="gallery-select" aria-label="Filter artists by name">
-          <option value="">All Artists (A-Z)</option>
-          <option value="A-C">A - C</option>
-          <option value="D-F">D - F</option>
-          <option value="G-I">G - I</option>
-          <option value="J-L">J - L</option>
-          <option value="M-O">M - O</option>
-          <option value="P-R">P - R</option>
-          <option value="S-U">S - U</option>
-          <option value="V-Z">V - Z</option>
-        </select>
-        <select id="artistMediaFilter" class="gallery-select" aria-label="Filter by specialty">
-          <option value="">All Specialties</option>
-          <option value="painting">Painters</option>
-          <option value="sculpture">Sculptors</option>
-          <option value="sketch">Sketch Artists</option>
-        </select>
-        <span id="artistResultsCount" class="results-count"></span>
-      </div>
-      <div id="allArtistsGrid" class="artist-grid"></div>
-      <div id="artistsEmpty" class="empty-state" style="display:none;">
-        <p>No artists match your search.</p>
-      </div>
+      <h2 class="section-heading" style="font-size:1.6rem;margin-bottom:1.5rem;">Featured Artwork</h2>
+      <div id="exhibitionArtGrid" class="artwork-grid"></div>
+    </div>
+  </section>
+
+  <!-- ===== EXHIBITION ARTISTS ===== -->
+  <section class="page-content" id="exhibitionArtists" style="display:none;">
+    <div class="section-inner">
+      <h2 class="section-heading" style="font-size:1.6rem;margin-bottom:1.5rem;">Participating Artists</h2>
+      <div id="exhibitionArtistGrid" class="artist-grid"></div>
+    </div>
+  </section>
+
+  <section class="page-content">
+    <div class="section-inner" style="text-align:center; padding-top: 0;">
+      <a href="exhibitions.html" class="btn btn-secondary">Back to All Exhibitions</a>
     </div>
   </section>
   </main>

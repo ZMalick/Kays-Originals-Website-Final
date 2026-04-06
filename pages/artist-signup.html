@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Artist Sign Up — Kay's Originals</title>
+  <title>Artist Application — Kay's Originals</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -24,18 +24,25 @@
     <div class="nav-inner">
       <a href="../index.html" class="nav-brand">
         <img src="../images/KaysOrigLogo.png" alt="Kay's Originals" class="nav-logo">
-        <span class="nav-slogan">Discover Original Art</span>
+        <span class="nav-slogan">Artist Application</span>
       </a>
       <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
       <ul class="nav-links" id="navLinks">
-        <li><a href="gallery.html" class="nav-link">Gallery</a></li>
+        <li class="has-dropdown">
+          <button class="dropdown-toggle nav-link" aria-haspopup="true" aria-expanded="false">Artwork</button>
+          <ul class="dropdown" role="menu">
+            <li><a href="gallery.html?category=painting" class="nav-link">Paintings</a></li>
+            <li><a href="gallery.html?category=sculpture" class="nav-link">Sculptures</a></li>
+            <li><a href="gallery.html?category=sketch" class="nav-link">Sketches</a></li>
+          </ul>
+        </li>
         <li><a href="artists.html" class="nav-link">Artists</a></li>
-        <li><a href="consignment.html" class="nav-link">Consignment</a></li>
+        <li><a href="exhibitions.html" class="nav-link">Exhibitions</a></li>
         <li><a href="about.html" class="nav-link">About</a></li>
+        <li><a href="consignment.html" class="nav-link">For Artists</a></li>
         <li><a href="contact.html" class="nav-link">Contact</a></li>
-        <li><a href="artist-login.html" class="nav-link nav-link-login">Artist Login</a></li>
       </ul>
     </div>
   </nav>
@@ -46,80 +53,47 @@
   <section class="page-hero">
     <div class="section-inner">
       <span class="page-label">Join the Gallery</span>
-      <h1>Artist Sign Up</h1>
-      <p class="hero-subtitle">Interested in showing your work at Kay's Originals? Fill out the form below and we'll be in touch.</p>
+      <h1>Artist Application</h1>
+      <p class="hero-subtitle">Interested in showing your work at Kay's Originals? Download the application form and submit it by email.</p>
     </div>
   </section>
 
-  <!-- ===== SIGN UP FORM ===== -->
+  <!-- ===== APPLICATION INFO ===== -->
   <section class="page-content">
     <div class="section-inner">
       <div class="contact-layout">
 
         <div class="contact-form">
-          <h2>Your Information</h2>
-          <form id="artistSignupForm">
-
-            <div class="form-group">
-              <label for="artistName">Full Name</label>
-              <input type="text" id="artistName" name="name" required placeholder="Your full name">
-            </div>
-
-            <div class="form-group">
-              <label for="artistEmail">Email</label>
-              <input type="email" id="artistEmail" name="email" required placeholder="your@email.com">
-            </div>
-
-            <div class="form-group">
-              <label for="artistPhone">Phone (optional)</label>
-              <input type="tel" id="artistPhone" name="phone" placeholder="(555) 000-0000">
-            </div>
-
-            <div class="form-group">
-              <label for="artistMedia">Primary Media</label>
-              <select id="artistMedia" name="media" required>
-                <option value="">Select a category...</option>
-                <option value="painting">Paintings</option>
-                <option value="sculpture">Sculptures</option>
-                <option value="sketch">Sketches</option>
-                <option value="mixed">Mixed Media</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="artistPortfolio">Portfolio or Website URL (optional)</label>
-              <input type="url" id="artistPortfolio" name="portfolio" placeholder="https://yourwebsite.com">
-            </div>
-
-            <div class="form-group">
-              <label for="artistBio">Artist Statement</label>
-              <textarea id="artistBio" name="bio" rows="6" required placeholder="Tell us about your work, your background, and what drives your art."></textarea>
-            </div>
-
-            <button type="submit" class="btn btn-primary">Submit Application</button>
-            <div id="signupSuccess" class="form-success" style="display:none;">
-              <p>Thank you for applying! We'll review your submission and reach out soon.</p>
-            </div>
-
-          </form>
-          <p style="margin-top: 1rem; font-size: 0.92rem; color: var(--text-secondary);">
-            Already have an account? <a href="artist-login.html" style="color: var(--blue); font-weight: 500;">Sign in</a>
-          </p>
+          <h2>How to Apply</h2>
+          <ol style="line-height: 1.8; margin-bottom: 2rem; padding-left: 1.25rem;">
+            <li><strong>Download</strong> the application form using the button below.</li>
+            <li><strong>Fill out</strong> the form completely with your name, contact information, media, and artist statement.</li>
+            <li><strong>Attach</strong> approximately 5 sample JPEG images of your work. Please keep file sizes small (under 2 MB each).</li>
+            <li><strong>Email</strong> the completed form and images to <a href="mailto:applications@kaysoriginals.com" style="color: var(--blue); font-weight: 500;">applications@kaysoriginals.com</a>.</li>
+          </ol>
+          <a href="mailto:applications@kaysoriginals.com?subject=Artist Application Request" class="btn btn-primary">Request Application Form</a>
+          <p style="margin-top: 0.75rem; font-size: 0.85rem; color: var(--text-secondary);">Email us and we'll send you the application form directly.</p>
         </div>
 
         <div class="contact-info">
           <h2>What Happens Next</h2>
           <div class="info-block">
-            <h4>Review</h4>
-            <p>Our team reviews every application and looks for original work with a strong artistic voice.</p>
+            <h4>1. Review</h4>
+            <p>Our team reviews every application and looks for original work with a strong artistic voice. We typically ask for about 5 pieces initially.</p>
           </div>
           <div class="info-block">
-            <h4>Response Time</h4>
-            <p>We aim to respond within 2–3 weeks of receiving your application.</p>
+            <h4>2. Contact</h4>
+            <p>If your work is a good fit, we'll reach out to schedule an appointment. We aim to respond within 2-3 weeks.</p>
+          </div>
+          <div class="info-block">
+            <h4>3. In-Person Visit</h4>
+            <p>Bring your physical artwork to the gallery for an in-person review. We'll discuss consignment terms and select pieces to display (typically 3 from your initial submission).</p>
           </div>
           <div class="info-block">
             <h4>Questions?</h4>
-            <p><a href="contact.html">Contact us</a> or read about our <a href="consignment.html">consignment process</a>.</p>
+            <p><strong>Phone:</strong> <a href="tel:+15550123456">(555) 012-3456</a><br>
+               <strong>Email:</strong> <a href="mailto:applications@kaysoriginals.com">applications@kaysoriginals.com</a></p>
+            <p style="margin-top:0.5rem;">Or read about our <a href="consignment.html">consignment process</a>.</p>
           </div>
         </div>
 
@@ -150,7 +124,7 @@
         <h4>Company</h4>
         <ul>
           <li><a href="about.html">About Us</a></li>
-          <li><a href="consignment.html">Consignment</a></li>
+          <li><a href="consignment.html">For Artists</a></li>
           <li><a href="contact.html">Contact</a></li>
           <li><a href="faq.html">FAQ</a></li>
         </ul>
@@ -159,7 +133,7 @@
         <h4>Get in Touch</h4>
         <p><strong>Email</strong><br><a href="mailto:info@kaysoriginals.com">info@kaysoriginals.com</a></p>
         <p><strong>Phone</strong><br><a href="tel:+15550123456">(555) 012-3456</a></p>
-        <p><strong>Location</strong><br>Austin, TX</p>
+        <p><strong>Location</strong><br><a href="https://maps.google.com/?q=1234+Gallery+Lane+Suite+100+Austin+TX+78701" target="_blank" rel="noopener">1234 Gallery Lane, Suite 100<br>Austin, TX 78701</a></p>
       </div>
     </div>
     <div class="footer-bottom">

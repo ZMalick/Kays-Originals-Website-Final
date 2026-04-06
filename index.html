@@ -30,115 +30,44 @@
         <span></span><span></span><span></span>
       </button>
       <ul class="nav-links" id="navLinks">
-        <li><a href="pages/gallery.html" class="nav-link">Gallery</a></li>
+        <li class="has-dropdown">
+          <button class="dropdown-toggle nav-link" aria-haspopup="true" aria-expanded="false">Artwork</button>
+          <ul class="dropdown" role="menu">
+            <li><a href="pages/gallery.html?category=painting" class="nav-link">Paintings</a></li>
+            <li><a href="pages/gallery.html?category=sculpture" class="nav-link">Sculptures</a></li>
+            <li><a href="pages/gallery.html?category=sketch" class="nav-link">Sketches</a></li>
+          </ul>
+        </li>
         <li><a href="pages/artists.html" class="nav-link">Artists</a></li>
-        <li><a href="pages/consignment.html" class="nav-link">Consignment</a></li>
+        <li><a href="pages/exhibitions.html" class="nav-link">Exhibitions</a></li>
         <li><a href="pages/about.html" class="nav-link">About</a></li>
+        <li><a href="pages/consignment.html" class="nav-link">For Artists</a></li>
         <li><a href="pages/contact.html" class="nav-link">Contact</a></li>
-        <li><a href="pages/artist-login.html" class="nav-link nav-link-login">Artist Login</a></li>
       </ul>
     </div>
   </nav>
 
   <main id="main-content">
-  <!-- ===== HERO ===== -->
-  <section class="home-hero">
-    <div class="hero-slideshow">
-      <div class="hero-slide active" style="background-image:url('https://images.unsplash.com/photo-1577720643272-265f09367456?w=1600&h=900&fit=crop')"></div>
-      <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=1600&h=900&fit=crop')"></div>
-      <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=1600&h=900&fit=crop')"></div>
-      <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1547891654-e66ed7ebb968?w=1600&h=900&fit=crop')"></div>
-    </div>
-    <div class="hero-overlay"></div>
-    <div class="section-inner hero-center">
-      <img src="images/KaysOrigLogo.png" alt="Kay's Originals" class="hero-logo-img">
-      <h1>Original Art, Personally Curated</h1>
-      <p class="hero-subtitle">Discover bold, original artwork from visionary artists — all in one place.</p>
-      <div class="hero-actions">
-        <a href="pages/gallery.html" class="btn btn-primary">Browse Artwork</a>
-        <a href="pages/consignment.html" class="btn btn-secondary">For Artists</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== FEATURED ARTWORK ===== -->
-  <section class="featured-artwork">
-    <div class="section-inner">
-      <div class="section-header">
-        <h2 class="section-heading">Featured Artwork</h2>
-        <p class="section-subhead">A curated selection from our gallery's most compelling pieces.</p>
-      </div>
-      <div id="featuredGrid" class="artwork-grid"></div>
-      <div class="section-cta">
-        <a href="pages/gallery.html" class="btn btn-primary">See All Artwork</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== BROWSE BY CATEGORY ===== -->
-  <section class="browse-category">
-    <div class="section-inner">
-      <div class="section-header">
-        <h2 class="section-heading">Browse by Category</h2>
-        <p class="section-subhead">Explore our collection across three media.</p>
-      </div>
-      <div class="category-grid">
-
-        <a href="pages/gallery.html?category=painting" class="category-card">
-          <img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=800&h=500&fit=crop" alt="Paintings category" class="category-img">
-          <div class="category-overlay"></div>
-          <div class="category-content">
-            <h3>Paintings</h3>
-            <p>Oils, watercolors, acrylics &amp; mixed media on canvas</p>
+    <section class="home-welcome">
+      <div class="home-welcome-inner">
+        <div class="home-welcome-text">
+          <p class="home-label">Austin, TX</p>
+          <h1>Welcome to<br>Kay's Originals</h1>
+          <p class="home-intro">A personally curated gallery showcasing bold, original artwork from visionary artists. Whether you're a collector, a first-time visitor, or an artist looking to share your work, there's a place for you here.</p>
+          <blockquote class="home-quote">
+            <p>"Every piece in our gallery tells a story. Our job is to help it find the right home."</p>
+            <cite>— Kay Green, Founder</cite>
+          </blockquote>
+          <div class="home-quick-links">
+            <a href="pages/gallery.html" class="btn btn-primary">Browse Artwork</a>
+            <a href="pages/artists.html" class="btn btn-secondary">Meet the Artists</a>
           </div>
-        </a>
-
-        <a href="pages/gallery.html?category=sculpture" class="category-card">
-          <img src="https://images.unsplash.com/photo-1544967082-d9d25d867d66?w=800&h=500&fit=crop" alt="Sculptures category" class="category-img">
-          <div class="category-overlay"></div>
-          <div class="category-content">
-            <h3>Sculptures</h3>
-            <p>Bronze, marble, clay &amp; found-object assemblages</p>
-          </div>
-        </a>
-
-        <a href="pages/gallery.html?category=sketch" class="category-card">
-          <img src="https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=800&h=500&fit=crop" alt="Sketches category" class="category-img">
-          <div class="category-overlay"></div>
-          <div class="category-content">
-            <h3>Sketches</h3>
-            <p>Charcoal, graphite, ink &amp; pastel studies on paper</p>
-          </div>
-        </a>
-
+        </div>
+        <div class="home-featured" id="homeFeaturedArtwork">
+          <!-- Populated by JS: single featured artwork -->
+        </div>
       </div>
-    </div>
-  </section>
-
-  <!-- ===== ARTIST SPOTLIGHT ===== -->
-  <section class="artist-spotlight">
-    <div class="section-inner">
-      <div class="section-header">
-        <h2 class="section-heading">Artist Spotlight</h2>
-        <p class="section-subhead">Meet the visionaries behind the work.</p>
-      </div>
-      <div id="artistGrid" class="artist-grid"></div>
-      <div class="section-cta">
-        <a href="pages/artists.html" class="btn btn-secondary">View All Artists</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== KAY'S QUOTE ===== -->
-  <section class="quote-section">
-    <div class="section-inner">
-      <blockquote class="founder-quote">
-        <p>"Every piece in our gallery tells a story. Our job is to help it find the right home."</p>
-        <cite>— Kay Green, Founder</cite>
-      </blockquote>
-    </div>
-  </section>
-
+    </section>
   </main>
 
   <!-- ===== FOOTER ===== -->
@@ -148,11 +77,6 @@
         <img src="images/KaysOrigLogo.png" alt="Kay's Originals" class="footer-logo">
         <p class="footer-slogan">Discover Original Art</p>
         <p class="footer-tagline">A curated gallery celebrating bold, original artwork from visionary artists.</p>
-        <div class="footer-social">
-          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></a>
-          <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
-          <a href="#" aria-label="Pinterest"><svg viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.372 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 01.083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.631-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12 0-6.628-5.373-12-12-12z"/></svg></a>
-        </div>
       </div>
       <div class="footer-links">
         <h4>Explore</h4>
@@ -167,7 +91,7 @@
         <h4>Company</h4>
         <ul>
           <li><a href="pages/about.html">About Us</a></li>
-          <li><a href="pages/consignment.html">Consignment</a></li>
+          <li><a href="pages/consignment.html">For Artists</a></li>
           <li><a href="pages/contact.html">Contact</a></li>
           <li><a href="pages/faq.html">FAQ</a></li>
         </ul>
@@ -176,7 +100,7 @@
         <h4>Get in Touch</h4>
         <p><strong>Email</strong><br><a href="mailto:info@kaysoriginals.com">info@kaysoriginals.com</a></p>
         <p><strong>Phone</strong><br><a href="tel:+15550123456">(555) 012-3456</a></p>
-        <p><strong>Location</strong><br>Austin, TX</p>
+        <p><strong>Location</strong><br><a href="https://maps.google.com/?q=1234+Gallery+Lane+Suite+100+Austin+TX+78701" target="_blank" rel="noopener">1234 Gallery Lane, Suite 100<br>Austin, TX 78701</a></p>
       </div>
     </div>
     <div class="footer-bottom">

@@ -30,8 +30,17 @@
   --font-heading: 'DM Serif Display', Georgia, serif;
   --font-body: 'Outfit', system-ui, sans-serif;
 
-  --nav-height: 76px;
-  --section-gap: 7rem;
+  --nav-height: 64px;
+  --section-gap: 3rem;
+  --color-bar-height: 3px;
+
+  /* z-index scale */
+  --z-nav: 1000;
+  --z-nav-backdrop: 998;
+  --z-hamburger: 1001;
+  --z-modal: 2000;
+  --z-lightbox: 3000;
+  --z-skip: 10000;
 }
 
 html {
@@ -90,7 +99,7 @@ ul {
 }
 
 .section-header {
-  margin-bottom: 3.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .section-heading {
@@ -112,7 +121,7 @@ ul {
 
 .section-cta {
   text-align: center;
-  margin-top: 3.5rem;
+  margin-top: 1.5rem;
 }
 
 /* --- Buttons --- */
@@ -165,10 +174,10 @@ ul {
 }
 
 .btn-hero:hover {
-  background: var(--gold);
-  color: var(--charcoal);
+  background: var(--teal);
+  color: var(--white);
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(232, 184, 75, 0.3);
+  box-shadow: 0 8px 24px rgba(42, 157, 143, 0.3);
 }
 
 /* --- Focus-visible accessibility --- */
@@ -189,7 +198,7 @@ textarea:focus-visible {
 
 .nav-link:focus-visible,
 .dropdown-toggle:focus-visible {
-  outline: 2px solid var(--gold);
+  outline: 2px solid var(--teal);
   outline-offset: 2px;
 }
 
@@ -210,7 +219,7 @@ textarea:focus-visible {
 .main-nav {
   position: sticky;
   top: 0;
-  z-index: 1000;
+  z-index: var(--z-nav);
   background: rgba(30, 30, 30, 0.97);
   height: var(--nav-height);
   backdrop-filter: blur(16px);
@@ -234,7 +243,7 @@ textarea:focus-visible {
 }
 
 .nav-logo {
-  height: 48px;
+  height: calc(var(--nav-height) - 12px);
   width: auto;
 }
 
@@ -257,10 +266,16 @@ textarea:focus-visible {
 
 .nav-link,
 .dropdown-toggle {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
   color: rgba(255, 255, 255, 0.75);
-  font-size: 0.88rem;
+  font-size: 0.82rem;
   font-weight: 400;
-  padding: 0.55rem 1.1rem;
+  font-family: var(--font-body);
+  padding: 0.4rem 0.9rem;
   border-radius: 6px;
   transition: color 0.25s, background 0.25s;
   letter-spacing: 0.01em;
@@ -273,21 +288,6 @@ textarea:focus-visible {
   background: rgba(255, 255, 255, 0.07);
 }
 
-/* Artist Login pill */
-.nav-link-login {
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 100px;
-  margin-left: 0.75rem;
-  padding: 0.4rem 1.1rem;
-  font-size: 0.82rem;
-  color: rgba(255, 255, 255, 0.85);
-}
-.nav-link-login:hover,
-.nav-link-login:focus-visible {
-  border-color: var(--gold);
-  color: var(--gold);
-  background: transparent;
-}
 
 /* Dropdown */
 .has-dropdown {
@@ -330,6 +330,7 @@ textarea:focus-visible {
 }
 
 .has-dropdown:hover .dropdown,
+.has-dropdown:focus-within .dropdown,
 .has-dropdown.open .dropdown {
   opacity: 1;
   visibility: visible;
@@ -347,7 +348,7 @@ textarea:focus-visible {
 
 .dropdown li a:hover {
   background: rgba(255, 255, 255, 0.05);
-  color: var(--gold);
+  color: var(--teal);
   padding-left: 1.7rem;
 }
 
@@ -361,7 +362,7 @@ textarea:focus-visible {
   border: none;
   cursor: pointer;
   padding: 0.5rem;
-  z-index: 1001;
+  z-index: var(--z-hamburger);
 }
 
 .hamburger span {
@@ -585,7 +586,7 @@ textarea:focus-visible {
   content: '';
   position: absolute;
   inset: 8px;
-  border: 1.5px solid var(--gold);
+  border: 1.5px solid var(--teal);
   pointer-events: none;
   z-index: 1;
   opacity: 0.75;
@@ -807,15 +808,15 @@ textarea:focus-visible {
   background: var(--white);
   border-radius: 12px;
   overflow: hidden;
-  border-top: 3px solid var(--gold);
+  border-top: 3px solid var(--teal);
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
   transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
               box-shadow 0.4s;
 }
 
 .artist-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.09);
+  transform: translateY(-8px);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.1);
 }
 
 .artist-photo-wrap {
@@ -876,6 +877,150 @@ textarea:focus-visible {
 }
 
 /* =============================================
+   COMPACT ARTIST CARDS (artists listing page)
+   ============================================= */
+body[data-page="artists"] .artist-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.6rem;
+}
+
+body[data-page="artists"] .artist-card {
+  border-radius: 6px;
+  border-top: none;
+  border-left: 3px solid var(--teal);
+  overflow: hidden;
+}
+
+body[data-page="artists"] .artist-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+body[data-page="artists"] .artist-card-link {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 1rem 0.65rem 0.85rem;
+}
+
+body[data-page="artists"] .artist-photo-wrap {
+  overflow: hidden;
+}
+
+body[data-page="artists"] .artist-photo {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  aspect-ratio: 1;
+}
+
+body[data-page="artists"] .artist-card:hover .artist-photo {
+  transform: none;
+}
+
+body[data-page="artists"] .artist-info {
+  padding: 0;
+}
+
+body[data-page="artists"] .artist-info h3 {
+  font-size: 1rem;
+  margin-bottom: 0.1rem;
+}
+
+body[data-page="artists"] .artist-media {
+  font-size: 0.65rem;
+  margin-bottom: 0.2rem;
+}
+
+body[data-page="artists"] .artist-info p {
+  font-size: 0.82rem;
+  line-height: 1.4;
+  margin-bottom: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+body[data-page="artists"] .artist-link {
+  display: none;
+}
+
+/* ===== BACK BUTTON ===== */
+.back-btn {
+  margin-bottom: 1rem;
+  display: inline-block;
+  font-size: 0.85rem;
+  padding: 0.45rem 1.2rem;
+}
+
+/* ===== STOREFRONT MAP LINK ===== */
+.storefront-map-link {
+  display: block;
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.storefront-map-link img {
+  width: 100%;
+  display: block;
+  transition: transform 0.3s;
+}
+
+.storefront-map-link:hover img {
+  transform: scale(1.02);
+}
+
+.storefront-map-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(30, 30, 30, 0.55);
+  color: var(--white);
+  text-align: center;
+  padding: 0.6rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  opacity: 1;
+  transition: opacity 0.3s;
+}
+
+.storefront-map-link:hover .storefront-map-overlay {
+  background: rgba(30, 30, 30, 0.75);
+}
+
+.artist-filter-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+/* Responsive artist grid */
+@media (max-width: 1023px) {
+  body[data-page="artists"] .artist-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  body[data-page="artists"] .artist-grid .artist-card:last-child {
+    grid-column: auto;
+    max-width: none;
+    margin: 0;
+  }
+}
+
+@media (max-width: 640px) {
+  body[data-page="artists"] .artist-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =============================================
    6. FOOTER
    ============================================= */
 .site-footer {
@@ -886,16 +1031,16 @@ textarea:focus-visible {
 .footer-inner {
   max-width: 1240px;
   margin: 0 auto;
-  padding: 4.5rem 2rem 3rem;
+  padding: 2.5rem 2rem 2rem;
   display: grid;
-  grid-template-columns: 1.6fr 1fr 1fr 1.1fr;
-  gap: 2.5rem;
+  grid-template-columns: 1.3fr 1fr 1fr 1.2fr;
+  gap: 3rem;
 }
 
 .footer-logo {
   height: 50px;
   width: auto;
-  margin-bottom: 1rem;
+  margin-bottom: 0.6rem;
 }
 
 .footer-slogan {
@@ -903,7 +1048,7 @@ textarea:focus-visible {
   font-style: italic;
   font-size: 0.95rem;
   color: rgba(255, 255, 255, 0.4);
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.4rem;
 }
 
 .footer-tagline {
@@ -920,7 +1065,7 @@ textarea:focus-visible {
   font-size: 1rem;
   font-weight: 400;
   color: var(--white);
-  margin-bottom: 1.25rem;
+  margin-bottom: 1rem;
 }
 
 .footer-links ul {
@@ -937,14 +1082,14 @@ textarea:focus-visible {
 }
 
 .footer-links a:hover {
-  color: var(--gold);
+  color: var(--teal);
   transform: translateX(4px);
 }
 
 .footer-contact p {
   font-size: 0.85rem;
   font-weight: 300;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
   line-height: 1.5;
 }
 
@@ -955,7 +1100,18 @@ textarea:focus-visible {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   display: block;
-  margin-bottom: 0.15rem;
+  margin-bottom: 0.25rem;
+}
+
+.footer-contact a {
+  color: var(--teal);
+  text-decoration: none;
+  transition: opacity 0.25s;
+}
+
+.footer-contact a:hover {
+  opacity: 0.75;
+  text-decoration: underline;
 }
 
 .footer-bottom {
@@ -971,120 +1127,227 @@ textarea:focus-visible {
    7. COLOR BAR
    ============================================= */
 .color-bar {
-  height: 3px;
-  background: linear-gradient(90deg, var(--blue), var(--teal), var(--teal), var(--gold), var(--coral));
+  height: var(--color-bar-height);
+  background: linear-gradient(90deg, var(--blue), var(--teal), var(--teal), var(--coral));
 }
 
 /* =============================================
-   8. NEW HOMEPAGE HERO
+   8. HOMEPAGE WELCOME
    ============================================= */
-.home-hero {
-  position: relative;
-  overflow: hidden;
+.home-welcome {
+  min-height: calc(100vh - var(--nav-height) - var(--color-bar-height));
+  display: flex;
+  align-items: center;
+  background: var(--off-white);
 }
 
-.hero-slideshow {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
+.home-welcome-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 2rem;
 }
 
-.hero-slide {
-  position: absolute;
-  inset: 0;
-  background-size: cover;
-  background-position: center;
-  opacity: 0;
-  transition: opacity 1.5s ease-in-out;
+.home-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--teal);
+  margin-bottom: 0.6rem;
 }
 
-.hero-slide.active {
-  opacity: 1;
-}
-
-.hero-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(30, 30, 30, 0.65);
-  z-index: 1;
-}
-
-.hero-center {
-  position: relative;
-  z-index: 2;
-  text-align: center;
-  padding: 4rem 0;
-}
-
-.hero-logo-img {
-  height: 120px;
-  margin: 0 auto 1.5rem;
-  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
-}
-
-.home-hero h1 {
+.home-welcome-text h1 {
   font-family: var(--font-heading);
   font-size: 2.75rem;
   font-weight: 400;
-  margin-bottom: 0.75rem;
-  color: var(--white);
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-
-.hero-subtitle {
-  font-size: 1.1rem;
-  font-weight: 300;
-  color: rgba(255, 255, 255, 0.95);
-  max-width: 500px;
-  margin: 0 auto 2rem;
-  line-height: 1.6;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-}
-
-.hero-actions {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.home-hero .btn-secondary {
-  color: var(--white);
-  border-color: var(--white);
-}
-
-.home-hero .btn-secondary:hover {
-  background: var(--white);
+  line-height: 1.08;
   color: var(--charcoal);
+  margin-bottom: 1.25rem;
 }
 
-/* =============================================
-   9. KAY'S QUOTE SECTION
-   ============================================= */
-.quote-section {
-  background: var(--light-gray);
-  padding: 4rem 0;
+.home-intro {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--charcoal);
+  margin-bottom: 1.5rem;
 }
 
-.founder-quote {
-  text-align: center;
-  max-width: 600px;
-  margin: 0 auto;
+.home-quote {
+  border-left: 3px solid var(--teal);
+  padding: 0.75rem 0 0.75rem 1.25rem;
+  margin-bottom: 2rem;
 }
 
-.founder-quote p {
+.home-quote p {
   font-family: var(--font-heading);
   font-style: italic;
-  font-size: 1.5rem;
+  font-size: 1.15rem;
   line-height: 1.5;
   color: var(--charcoal);
+  margin-bottom: 0.4rem;
+}
+
+.home-quote cite {
+  font-size: 0.85rem;
+  font-style: normal;
+  color: var(--text-secondary);
+}
+
+.home-quick-links {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 0;
+}
+
+.home-storefront {
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+}
+
+.home-storefront-img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* -- Featured artwork card (right column) -- */
+.home-featured-card {
+  position: relative;
+  background: var(--white);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+}
+
+.home-featured-link {
+  display: block;
+  overflow: hidden;
+}
+
+.home-featured-img {
+  width: 100%;
+  display: block;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.home-featured-link:hover .home-featured-img {
+  transform: scale(1.03);
+}
+
+.home-featured-info {
+  padding: 1.5rem;
+}
+
+.home-featured-title {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 400;
+  line-height: 1.15;
+  color: var(--charcoal);
+  margin-bottom: 0.35rem;
+}
+
+.home-featured-artist {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
   margin-bottom: 0.75rem;
 }
 
-.founder-quote cite {
-  font-size: 0.9rem;
-  font-style: normal;
+.home-featured-desc {
+  font-size: 0.92rem;
+  line-height: 1.6;
   color: var(--text-secondary);
+  margin-bottom: 1.25rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.badge-featured {
+  display: inline-block;
+  background: var(--teal);
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.3rem 0.7rem;
+  border-radius: 4px;
+  z-index: 2;
+}
+
+/* Badge inside home featured card is absolutely positioned */
+.home-featured-card .badge-featured {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+}
+
+.badge-sold {
+  display: inline-block;
+  background: var(--coral);
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.3rem 0.7rem;
+  border-radius: 4px;
+}
+
+.artwork-card--sold .card-image {
+  filter: grayscale(20%);
+}
+
+.detail-sold {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+}
+
+.detail-exhibitions {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--light-gray);
+}
+
+.detail-exhibitions h3 {
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  margin-bottom: 0.75rem;
+}
+
+.detail-exhibitions ul {
+  list-style: none;
+  padding: 0;
+}
+
+.detail-exhibitions li {
+  margin-bottom: 0.4rem;
+}
+
+.detail-exhibitions a {
+  color: var(--blue);
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.detail-exhibitions a:hover {
+  color: var(--blue-dark);
 }
 
 /* =============================================
@@ -1092,13 +1355,13 @@ textarea:focus-visible {
    ============================================= */
 .page-hero {
   background: var(--light-gray);
-  padding: 4rem 0 3rem;
+  padding: 1.75rem 0 1.25rem;
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .page-hero h1 {
   font-family: var(--font-heading);
-  font-size: 3rem;
+  font-size: 2.2rem;
   font-weight: 400;
   color: var(--charcoal);
   line-height: 1.1;
@@ -1126,7 +1389,7 @@ textarea:focus-visible {
 }
 
 .page-content {
-  padding: 3.5rem 0 var(--section-gap);
+  padding: 1.5rem 0 var(--section-gap);
 }
 
 .back-link {
@@ -1244,8 +1507,8 @@ textarea:focus-visible {
   display: flex;
   align-items: center;
   gap: 1rem;
-  margin-bottom: 2.5rem;
-  padding-bottom: 1.5rem;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
@@ -1345,8 +1608,8 @@ textarea:focus-visible {
    ============================================= */
 .profile-header {
   display: flex;
-  gap: 2.5rem;
-  margin-bottom: 3rem;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .profile-photo {
@@ -1380,13 +1643,18 @@ textarea:focus-visible {
    ============================================= */
 .about-hero {
   text-align: center;
-  padding: 4rem 0 3rem;
+  padding: 1.75rem 0 1.25rem;
   background: var(--light-gray);
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .about-hero .hero-logo-img {
   height: 90px;
+  margin: 0 auto;
+}
+
+.hero-center {
+  text-align: center;
 }
 
 .about-hero h1 {
@@ -1409,7 +1677,7 @@ textarea:focus-visible {
 }
 
 .about-story {
-  padding: 3rem 0;
+  padding: 1.5rem 0;
 }
 
 .about-two-col {
@@ -1438,9 +1706,43 @@ textarea:focus-visible {
   margin-bottom: 0.75rem;
 }
 
+.quote-section {
+  background: var(--charcoal);
+  padding: 3.5rem 0;
+}
+
+.founder-quote {
+  max-width: 680px;
+  margin: 0 auto;
+  text-align: left;
+  border: none;
+  border-left: 4px solid var(--teal);
+  padding: 0 0 0 2rem;
+}
+
+.founder-quote p {
+  font-family: var(--font-heading);
+  font-size: 1.65rem;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--white);
+  line-height: 1.45;
+  margin-bottom: 1rem;
+}
+
+.founder-quote cite {
+  display: block;
+  font-size: 0.88rem;
+  font-style: normal;
+  font-weight: 500;
+  color: var(--teal);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
 .about-cta {
   text-align: center;
-  padding: 3.5rem 0;
+  padding: 1.5rem 0;
 }
 
 .about-cta h2 {
@@ -1465,8 +1767,8 @@ textarea:focus-visible {
    ============================================= */
 .consignment-hero {
   text-align: center;
-  padding: 3.5rem 0 2rem;
-  background: var(--white);
+  padding: 1.75rem 0 1rem;
+  background: var(--light-gray);
 }
 
 .consignment-hero .section-label {
@@ -1480,7 +1782,7 @@ textarea:focus-visible {
 }
 
 .consignment-steps {
-  padding: 3rem 0;
+  padding: 1.5rem 0;
 }
 
 .steps-grid {
@@ -1524,7 +1826,7 @@ textarea:focus-visible {
 }
 
 .consignment-values {
-  padding: 3rem 0;
+  padding: 1.5rem 0;
   background: var(--white);
 }
 
@@ -1549,7 +1851,7 @@ textarea:focus-visible {
 
 .consignment-cta {
   text-align: center;
-  padding: 3rem 0;
+  padding: 1.5rem 0;
   background: var(--light-gray);
 }
 
@@ -1564,12 +1866,34 @@ textarea:focus-visible {
    ============================================= */
 .contact-layout {
   display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  gap: 3rem;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 2rem;
 }
 
 .form-group {
   margin-bottom: 1.25rem;
+}
+
+.radio-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.35rem;
+}
+
+.radio-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.92rem;
+  font-weight: 400;
+  color: var(--charcoal);
+  cursor: pointer;
+}
+
+.radio-label input[type="radio"] {
+  width: auto;
+  margin: 0;
 }
 
 .form-group label {
@@ -1626,7 +1950,105 @@ textarea:focus-visible {
 }
 
 /* =============================================
-   17. FAQ PAGE
+   17. EXHIBITIONS PAGE
+   ============================================= */
+.exhibitions-grid {
+  display: grid;
+  gap: 2rem;
+}
+
+.exhibition-card {
+  background: var(--white);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.exhibition-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+}
+
+.exhibition-card-link {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  text-decoration: none;
+  color: inherit;
+}
+
+.exhibition-thumbs {
+  overflow: hidden;
+}
+
+.exhibition-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.exhibition-card-info {
+  padding: 1.5rem;
+}
+
+.exhibition-card-title {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 400;
+  line-height: 1.15;
+  color: var(--charcoal);
+  margin-bottom: 0.4rem;
+}
+
+.exhibition-card-dates {
+  font-size: 0.88rem;
+  color: var(--teal);
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+}
+
+.exhibition-card-desc {
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.exhibition-card-cta {
+  color: var(--blue);
+  font-size: 0.88rem;
+  font-weight: 500;
+}
+
+/* Exhibition detail */
+.exhibition-dates {
+  font-size: 1.05rem;
+  color: var(--teal);
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+.exhibition-description {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+  max-width: 720px;
+}
+
+.exhibition-disclaimer {
+  font-size: 0.85rem;
+  color: var(--mid-gray);
+  font-style: italic;
+}
+
+/* =============================================
+   18. FAQ PAGE
    ============================================= */
 .faq-section-heading {
   font-size: 0.72rem;
@@ -1680,7 +2102,7 @@ textarea:focus-visible {
 }
 
 .faq-item.open .faq-answer {
-  max-height: 200px;
+  max-height: 500px;
   padding-bottom: 1.1rem;
 }
 
@@ -1689,7 +2111,7 @@ textarea:focus-visible {
   position: absolute;
   top: -100%;
   left: 1rem;
-  z-index: 10000;
+  z-index: var(--z-skip);
   padding: 0.5rem 1rem;
   background: var(--charcoal);
   color: var(--white);
@@ -1707,7 +2129,7 @@ textarea:focus-visible {
   display: none;
   position: fixed;
   inset: 0;
-  z-index: 998;
+  z-index: var(--z-nav-backdrop);
   background: rgba(0, 0, 0, 0.5);
 }
 .nav-backdrop.active {
@@ -1719,7 +2141,7 @@ textarea:focus-visible {
   display: none;
   position: fixed;
   inset: 0;
-  z-index: 9999;
+  z-index: var(--z-lightbox);
   background: rgba(0, 0, 0, 0.9);
   align-items: center;
   justify-content: center;
@@ -1770,8 +2192,8 @@ textarea:focus-visible {
 /* ===== RECENTLY ADDED BADGE ===== */
 .badge-new {
   display: inline-block;
-  background: var(--gold);
-  color: var(--charcoal);
+  background: var(--blue);
+  color: var(--white);
   font-size: 0.7rem;
   font-family: var(--font-body);
   font-weight: 600;
@@ -1784,7 +2206,7 @@ textarea:focus-visible {
 /* ===== ARTIST DETAIL HERO BANNER ===== */
 .artist-hero-banner {
   background: linear-gradient(135deg, var(--light-gray) 0%, var(--off-white) 100%);
-  padding: 3rem 0;
+  padding: 1.5rem 0;
 }
 
 /* ===== GALLERY DROPDOWNS ===== */
@@ -1793,7 +2215,7 @@ textarea:focus-visible {
   align-items: center;
   gap: 0.75rem;
   flex-wrap: wrap;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
 }
 .gallery-select {
   padding: 0.6rem 0.9rem;
@@ -1819,18 +2241,6 @@ textarea:focus-visible {
   font-family: var(--font-body);
   margin-top: 1rem;
 }
-.form-error-msg {
-  color: var(--coral);
-  font-size: 0.8rem;
-  font-family: var(--font-body);
-  margin-top: 0.25rem;
-}
-.form-group.has-error input,
-.form-group.has-error textarea,
-.form-group.has-error select {
-  border-color: var(--coral);
-}
-
 /* ===== CARD DIMENSIONS ===== */
 .card-dimensions {
   font-size: 0.75rem;
@@ -1854,7 +2264,7 @@ textarea:focus-visible {
   transition: color 0.2s ease;
 }
 .footer-social a:hover {
-  color: var(--gold);
+  color: var(--teal);
 }
 .footer-social svg {
   width: 24px;
@@ -1864,12 +2274,12 @@ textarea:focus-visible {
 
 /* ===== ACTIVE NAV STATE ===== */
 .nav-link.active {
-  color: var(--gold);
+  color: var(--teal);
 }
 
 /* ===== PRINT ===== */
 @media print {
-  .site-nav, .main-nav, .site-footer, .hamburger, .skip-link,
+  .main-nav, .site-footer, .hamburger, .skip-link,
   .nav-backdrop, .lightbox, .color-bar { display: none; }
   body { background: white; color: black; }
   a[href]::after { content: " (" attr(href) ")"; font-size: 0.8em; }
@@ -1883,7 +2293,7 @@ textarea:focus-visible {
 /* Tablet */
 @media (max-width: 1023px) {
   :root {
-    --section-gap: 5rem;
+    --section-gap: 2.5rem;
   }
 
   .hamburger {
@@ -1924,8 +2334,10 @@ textarea:focus-visible {
     visibility: visible;
     transform: none;
     box-shadow: none;
-    background: transparent;
+    background: var(--charcoal-light);
     border: none;
+    border-radius: 0;
+    padding: 0;
     padding-left: 1rem;
     max-height: 0;
     overflow: hidden;
@@ -1933,7 +2345,7 @@ textarea:focus-visible {
   }
 
   .has-dropdown.open .dropdown {
-    max-height: 200px;
+    max-height: 300px;
   }
 
   .hero-carousel {
@@ -2039,8 +2451,8 @@ textarea:focus-visible {
 /* Mobile */
 @media (max-width: 640px) {
   :root {
-    --nav-height: 64px;
-    --section-gap: 3.5rem;
+    --nav-height: 56px;
+    --section-gap: 2rem;
   }
 
   .section-inner {
@@ -2074,7 +2486,7 @@ textarea:focus-visible {
   .carousel-dots { right: 1.5rem; bottom: 1.5rem; }
 
   .section-heading { font-size: 2rem; }
-  .section-header { margin-bottom: 2.5rem; }
+  .section-header { margin-bottom: 1.25rem; }
 
   .artwork-grid {
     grid-template-columns: 1fr;
@@ -2141,4 +2553,260 @@ textarea:focus-visible {
 
   /* Quote */
   .founder-quote p { font-size: 1.3rem; }
+}
+
+/* =============================================
+   COMPACT GALLERY GRID (gallery page)
+   ============================================= */
+body[data-page="gallery"] .artwork-grid {
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.75rem;
+}
+
+body[data-page="gallery"] .artwork-card {
+  border-radius: 4px;
+}
+
+body[data-page="gallery"] .artwork-card:hover {
+  transform: translateY(-4px);
+}
+
+body[data-page="gallery"] .card-frame {
+  padding: 6px;
+}
+
+body[data-page="gallery"] .card-frame::before {
+  inset: 3px;
+  border-width: 1px;
+}
+
+body[data-page="gallery"] .card-image {
+  aspect-ratio: auto;
+  height: 160px;
+  width: 100%;
+  object-fit: cover;
+}
+
+body[data-page="gallery"] .card-overlay {
+  inset: 6px;
+}
+
+body[data-page="gallery"] .overlay-title {
+  font-size: 0.78rem;
+}
+
+body[data-page="gallery"] .overlay-artist {
+  font-size: 0.65rem;
+}
+
+body[data-page="gallery"] .card-info {
+  padding: 0.5rem 0.5rem 0.65rem;
+}
+
+body[data-page="gallery"] .card-title {
+  font-size: 0.82rem;
+  margin-bottom: 0.15rem;
+  line-height: 1.25;
+}
+
+body[data-page="gallery"] .card-artist {
+  font-size: 0.72rem;
+  color: var(--charcoal);
+}
+
+body[data-page="gallery"] .card-year,
+body[data-page="gallery"] .card-dimensions,
+body[data-page="gallery"] .media-tag,
+body[data-page="gallery"] .badge-featured,
+body[data-page="gallery"] .badge-sold,
+body[data-page="gallery"] .badge-new {
+  display: none;
+}
+
+/* =============================================
+   ARTWORK MODAL
+   ============================================= */
+.artwork-modal {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.artwork-modal[hidden] {
+  display: none;
+}
+
+.artwork-modal .modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+}
+
+.modal-panel {
+  position: relative;
+  z-index: 1;
+  background: var(--white);
+  border-radius: 8px;
+  max-width: 860px;
+  width: calc(100% - 2rem);
+  max-height: 90vh;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
+}
+
+.modal-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: var(--charcoal);
+  color: var(--white);
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.modal-close:hover {
+  background: var(--blue);
+}
+
+.modal-image-wrap {
+  overflow: hidden;
+  border-radius: 8px 0 0 8px;
+  background: var(--light-gray);
+}
+
+.modal-image-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  max-height: 70vh;
+  display: block;
+}
+
+.modal-info {
+  padding: 2rem 1.75rem;
+}
+
+.modal-title {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 400;
+  margin: 0.5rem 0 0.25rem;
+  line-height: 1.15;
+}
+
+.modal-artist {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+}
+
+.modal-year {
+  color: var(--mid-gray);
+  font-size: 0.82rem;
+  margin-bottom: 0.75rem;
+}
+
+.modal-desc {
+  font-size: 0.88rem;
+  line-height: 1.65;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.modal-specs {
+  font-size: 0.82rem;
+  color: var(--mid-gray);
+  line-height: 1.9;
+  margin-bottom: 1rem;
+}
+
+.modal-specs strong {
+  color: var(--text-secondary);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.modal-actions .btn {
+  padding: 0.6rem 1.4rem;
+  font-size: 0.82rem;
+}
+
+/* Responsive gallery grid */
+@media (max-width: 1023px) {
+  body[data-page="gallery"] .artwork-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .modal-panel {
+    grid-template-columns: 1fr;
+    max-width: 500px;
+  }
+  .modal-image-wrap {
+    border-radius: 8px 8px 0 0;
+    max-height: 40vh;
+  }
+}
+
+@media (max-width: 640px) {
+  body[data-page="gallery"] .artwork-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+  }
+  body[data-page="gallery"] .card-image {
+    height: 120px;
+  }
+  body[data-page="gallery"] .card-info {
+    padding: 0.35rem 0.4rem 0.5rem;
+  }
+  body[data-page="gallery"] .card-title {
+    font-size: 0.65rem;
+  }
+  body[data-page="gallery"] .card-artist {
+    font-size: 0.58rem;
+  }
+  .modal-panel {
+    max-width: calc(100% - 1rem);
+    max-height: 95vh;
+  }
+  .modal-info {
+    padding: 1.25rem;
+  }
+}
+
+/* ===== REDUCED MOTION ===== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+  .hero-carousel .slide {
+    transition: none;
+  }
 }

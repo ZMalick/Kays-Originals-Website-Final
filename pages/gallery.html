@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gallery — Kay's Originals</title>
+  <title>Artwork — Kay's Originals</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -24,18 +24,25 @@
     <div class="nav-inner">
       <a href="../index.html" class="nav-brand">
         <img src="../images/KaysOrigLogo.png" alt="Kay's Originals" class="nav-logo">
-        <span class="nav-slogan">Discover Original Art</span>
+        <span class="nav-slogan">Browse Artwork</span>
       </a>
       <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
       <ul class="nav-links" id="navLinks">
-        <li><a href="gallery.html" class="nav-link">Gallery</a></li>
+        <li class="has-dropdown">
+          <button class="dropdown-toggle nav-link" aria-haspopup="true" aria-expanded="false">Artwork</button>
+          <ul class="dropdown" role="menu">
+            <li><a href="gallery.html?category=painting" class="nav-link">Paintings</a></li>
+            <li><a href="gallery.html?category=sculpture" class="nav-link">Sculptures</a></li>
+            <li><a href="gallery.html?category=sketch" class="nav-link">Sketches</a></li>
+          </ul>
+        </li>
         <li><a href="artists.html" class="nav-link">Artists</a></li>
-        <li><a href="consignment.html" class="nav-link">Consignment</a></li>
+        <li><a href="exhibitions.html" class="nav-link">Exhibitions</a></li>
         <li><a href="about.html" class="nav-link">About</a></li>
+        <li><a href="consignment.html" class="nav-link">For Artists</a></li>
         <li><a href="contact.html" class="nav-link">Contact</a></li>
-        <li><a href="artist-login.html" class="nav-link nav-link-login">Artist Login</a></li>
       </ul>
     </div>
   </nav>
@@ -44,8 +51,7 @@
   <!-- ===== PAGE HEADER ===== -->
   <section class="page-hero">
     <div class="section-inner">
-      <h1>All Artwork</h1>
-      <p class="hero-subtitle">Browse our full collection of paintings, sculptures, and sketches.</p>
+      <h1>Artwork</h1>
     </div>
   </section>
 
@@ -53,25 +59,10 @@
   <section class="page-content">
     <div class="section-inner">
       <div class="gallery-filters" id="galleryFilters">
-        <button class="filter-pill active" data-category="all">All</button>
-        <button class="filter-pill" data-category="painting">Paintings</button>
+        <button class="filter-pill active" data-category="painting">Paintings</button>
         <button class="filter-pill" data-category="sculpture">Sculptures</button>
         <button class="filter-pill" data-category="sketch">Sketches</button>
-      </div>
-      <div class="gallery-search-row">
-        <input type="text" id="gallerySearch" class="gallery-search" placeholder="Search artwork or artist...">
         <span id="resultsCount" class="results-count"></span>
-      </div>
-      <div class="gallery-controls">
-        <select id="artistFilter" class="gallery-select" aria-label="Filter by artist">
-          <option value="">All Artists</option>
-        </select>
-        <select id="sortSelect" class="gallery-select" aria-label="Sort artwork">
-          <option value="default">Sort: Default</option>
-          <option value="newest">Sort: Newest First</option>
-          <option value="artist">Sort: Artist (A–Z)</option>
-          <option value="title">Sort: Title (A–Z)</option>
-        </select>
       </div>
       <div id="galleryGrid" class="artwork-grid"></div>
       <div id="galleryEmpty" class="empty-state" style="display:none;">
@@ -80,6 +71,28 @@
       </div>
     </div>
   </section>
+  <!-- ===== ARTWORK MODAL ===== -->
+  <div id="artworkModal" class="artwork-modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
+    <div class="modal-backdrop"></div>
+    <div class="modal-panel">
+      <button class="modal-close" id="modalClose" aria-label="Close">&times;</button>
+      <div class="modal-image-wrap">
+        <img id="modalImage" src="" alt="">
+      </div>
+      <div class="modal-info">
+        <span id="modalMediaTag" class="media-tag"></span>
+        <h2 id="modalTitle" class="modal-title"></h2>
+        <p id="modalArtist" class="modal-artist"></p>
+        <p id="modalYear" class="modal-year"></p>
+        <p id="modalDesc" class="modal-desc"></p>
+        <div id="modalSpecs" class="modal-specs"></div>
+        <div class="modal-actions">
+          <a id="modalDetailLink" href="#" class="btn btn-primary">View Full Detail</a>
+          <a id="modalArtistLink" href="#" class="btn btn-secondary">View Artist</a>
+        </div>
+      </div>
+    </div>
+  </div>
   </main>
 
   <!-- ===== FOOTER ===== -->
@@ -103,7 +116,7 @@
         <h4>Company</h4>
         <ul>
           <li><a href="about.html">About Us</a></li>
-          <li><a href="consignment.html">Consignment</a></li>
+          <li><a href="consignment.html">For Artists</a></li>
           <li><a href="contact.html">Contact</a></li>
           <li><a href="faq.html">FAQ</a></li>
         </ul>
@@ -112,7 +125,7 @@
         <h4>Get in Touch</h4>
         <p><strong>Email</strong><br><a href="mailto:info@kaysoriginals.com">info@kaysoriginals.com</a></p>
         <p><strong>Phone</strong><br><a href="tel:+15550123456">(555) 012-3456</a></p>
-        <p><strong>Location</strong><br>Austin, TX</p>
+        <p><strong>Location</strong><br><a href="https://maps.google.com/?q=1234+Gallery+Lane+Suite+100+Austin+TX+78701" target="_blank" rel="noopener">1234 Gallery Lane, Suite 100<br>Austin, TX 78701</a></p>
       </div>
     </div>
     <div class="footer-bottom">

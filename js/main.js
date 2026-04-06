@@ -19,23 +19,33 @@
   (function () {
     var page = document.body.dataset.page;
     if (!page) return;
-    var links = document.querySelectorAll('.nav-link');
     var map = {
-      home: null,
       gallery: 'gallery.html',
       artists: 'artists.html',
+      artist: 'artists.html',
+      artwork: 'gallery.html',
       consignment: 'consignment.html',
       about: 'about.html',
       contact: 'contact.html',
-      faq: 'faq.html'
+      faq: 'faq.html',
+      exhibitions: 'exhibitions.html',
+      exhibition: 'exhibitions.html'
     };
     var target = map[page];
-    links.forEach(function (link) {
+    if (!target) return;
+    // Check regular nav links
+    document.querySelectorAll('.nav-link').forEach(function (link) {
       link.classList.remove('active');
-      if (target && link.getAttribute('href').indexOf(target) !== -1) {
+      var href = link.getAttribute('href');
+      if (href && href.indexOf(target) !== -1) {
         link.classList.add('active');
       }
     });
+    // Check dropdown toggle for gallery/artwork pages
+    if (target === 'gallery.html') {
+      var toggle = document.querySelector('.dropdown-toggle');
+      if (toggle) toggle.classList.add('active');
+    }
   })();
 
   /* ---- Resolve local vs. external image paths ---- */
@@ -47,8 +57,10 @@
   function renderArtworkCard(art, isRecent) {
     var artist = KaysData.getArtist(art.artistId);
     var base = window.PAGE_BASE || '';
-    var badge = isRecent ? '<span class="badge-new">Recently Added</span>' : '';
-    return '<article class="artwork-card">' +
+    var badges = '';
+    if (art.featured) badges += '<span class="badge-featured">Featured</span> ';
+    if (isRecent) badges += '<span class="badge-new">Recently Added</span>';
+    return '<article class="artwork-card" data-artwork-id="' + art.id + '">' +
       '<a href="' + base + 'artwork.html?id=' + art.id + '" class="card-link">' +
         '<div class="card-frame">' +
           '<img src="' + resolveImageSrc(art.image) + '" alt="' + art.title + '" class="card-image" loading="lazy">' +
@@ -59,7 +71,7 @@
         '</div>' +
         '<div class="card-info">' +
           '<span class="media-tag tag-' + art.category + '">' + capitalize(art.category) + '</span>' +
-          (badge ? ' ' + badge : '') +
+          (badges ? ' ' + badges : '') +
           '<h3 class="card-title">' + art.title + '</h3>' +
           '<p class="card-artist">' + (artist ? artist.name : '') + '</p>' +
           '<p class="card-year">' + art.year + '</p>' +
@@ -72,7 +84,7 @@
   /* ---- Render an artist card (reused everywhere) ---- */
   function renderArtistCard(artist) {
     return '<div class="artist-card">' +
-      '<a href="' + (window.PAGE_BASE || '') + 'artist.html?id=' + artist.id + '" class="artist-card-link">' +
+      '<a href="' + (window.PAGE_BASE || '') + 'artist.html?id=' + artist.id + '" class="artist-card-link" title="View more about ' + artist.name + '">' +
         '<div class="artist-photo-wrap">' +
           '<img src="' + artist.photo + '" alt="' + artist.name + '" class="artist-photo" loading="lazy">' +
         '</div>' +
@@ -90,119 +102,64 @@
      PAGE: Homepage
      ======================================== */
 
-  /* ---- Hero Slideshow ---- */
-  var heroSlides = document.querySelectorAll('.hero-slide');
-  if (heroSlides.length > 1) {
-    var currentSlide = 0;
-    setInterval(function () {
-      heroSlides[currentSlide].classList.remove('active');
-      currentSlide = (currentSlide + 1) % heroSlides.length;
-      heroSlides[currentSlide].classList.add('active');
-    }, 5000);
-  }
-
-  var featuredGrid = document.getElementById('featuredGrid');
-  if (featuredGrid) {
-    var featured = KaysData.artworks.slice(0, 6);
-    var html = '';
-    for (var i = 0; i < featured.length; i++) {
-      html += renderArtworkCard(featured[i]);
+  /* Note: All data here comes from the trusted KaysData module (js/data.js),
+     not from user input. innerHTML usage is safe in this context. */
+  var homeFeatured = document.getElementById('homeFeaturedArtwork');
+  if (homeFeatured) {
+    var feat = KaysData.getFeaturedArtwork();
+    if (feat) {
+      var featArtist = KaysData.getArtist(feat.artistId);
+      var base = window.PAGE_BASE || '';
+      homeFeatured.innerHTML =
+        '<div class="home-featured-card">' +
+          '<span class="badge-featured">Featured</span>' +
+          '<a href="' + base + 'artwork.html?id=' + feat.id + '" class="home-featured-link">' +
+            '<img src="' + resolveImageSrc(feat.imageLg || feat.image) + '" alt="' + feat.title + '" class="home-featured-img">' +
+          '</a>' +
+          '<div class="home-featured-info">' +
+            '<h2 class="home-featured-title">' + feat.title + '</h2>' +
+            '<p class="home-featured-artist">' + (featArtist ? featArtist.name : '') + ' &middot; ' + feat.year + '</p>' +
+            '<p class="home-featured-desc">' + feat.description + '</p>' +
+            '<a href="' + base + 'artwork.html?id=' + feat.id + '" class="btn btn-primary">View This Piece</a>' +
+          '</div>' +
+        '</div>';
     }
-    featuredGrid.innerHTML = html;
-  }
-
-  var artistGrid = document.getElementById('artistGrid');
-  if (artistGrid) {
-    var artists = KaysData.artists.slice(0, 3);
-    var ahtml = '';
-    for (var j = 0; j < artists.length; j++) {
-      ahtml += renderArtistCard(artists[j]);
-    }
-    artistGrid.innerHTML = ahtml;
   }
 
   /* ========================================
      PAGE: Gallery
      ======================================== */
+  /* Note: All innerHTML below uses trusted KaysData module data, not user input. */
   var galleryGrid = document.getElementById('galleryGrid');
   if (galleryGrid) {
-    var artistFilter = document.getElementById('artistFilter');
-    var sortSelect = document.getElementById('sortSelect');
     var galleryEmpty = document.getElementById('galleryEmpty');
-    var clearFiltersBtn = document.getElementById('clearFilters');
     var pills = document.querySelectorAll('.filter-pill');
-    var gallerySearch = document.getElementById('gallerySearch');
     var resultsCount = document.getElementById('resultsCount');
 
-    // Normalize URL param — treat 'all' or missing as empty string
+    // Read category from URL param (from nav dropdown)
     var rawCat = getParam('category') || '';
-    var currentCategory = rawCat === 'all' ? '' : rawCat;
-    var currentArtist = '';
-    var currentSort = 'default';
-    var currentSearch = '';
+    var showAll = rawCat === 'all';
+    var currentCategory = showAll ? '' : (rawCat || 'painting');
 
-    // Populate artist dropdown
-    if (artistFilter) {
-      var artistList = KaysData.getArtistList();
-      artistList.forEach(function (a) {
-        var opt = document.createElement('option');
-        opt.value = a.id;
-        opt.textContent = a.name;
-        artistFilter.appendChild(opt);
-      });
-    }
-
-    // Set active pill state (matches URL param or defaults to "All")
+    // If URL has a specific category, set the matching pill active; otherwise default to first pill
     pills.forEach(function (p) {
-      var catVal = p.dataset.category === 'all' ? '' : (p.dataset.category || '');
-      p.classList.toggle('active', catVal === currentCategory);
+      p.classList.toggle('active', !showAll && p.dataset.category === currentCategory);
     });
+    if (!rawCat) {
+      // No URL param: default to paintings, first pill stays active
+      var firstPill = pills[0];
+      if (firstPill) firstPill.classList.add('active');
+    }
 
     function renderGallery() {
       var artworks = KaysData.artworks.slice();
 
-      // Filter by category
       if (currentCategory) {
         artworks = artworks.filter(function (a) { return a.category === currentCategory; });
       }
 
-      // Filter by artist
-      if (currentArtist) {
-        artworks = artworks.filter(function (a) { return a.artistId === currentArtist; });
-      }
-
-      // Filter by search
-      if (currentSearch) {
-        var q = currentSearch.toLowerCase();
-        artworks = artworks.filter(function (a) {
-          var ar = KaysData.getArtist(a.artistId);
-          return a.title.toLowerCase().indexOf(q) !== -1 ||
-                 (ar && ar.name.toLowerCase().indexOf(q) !== -1) ||
-                 a.medium.toLowerCase().indexOf(q) !== -1;
-        });
-      }
-
-      // Sort
-      if (currentSort === 'newest') {
-        artworks.sort(function (a, b) {
-          return (parseInt(b.year) || 0) - (parseInt(a.year) || 0);
-        });
-      } else if (currentSort === 'artist') {
-        artworks.sort(function (a, b) {
-          var na = (KaysData.getArtist(a.artistId) || {}).name || '';
-          var nb = (KaysData.getArtist(b.artistId) || {}).name || '';
-          return na.localeCompare(nb);
-        });
-      } else if (currentSort === 'title') {
-        artworks.sort(function (a, b) { return a.title.localeCompare(b.title); });
-      }
-
-      // Determine which are "recently added" (last 4 in original data array)
-      var totalCount = KaysData.artworks.length;
-      var recentIds = KaysData.artworks.slice(totalCount - 4).map(function (a) { return a.id; });
-
       galleryGrid.innerHTML = artworks.map(function (art) {
-        return renderArtworkCard(art, recentIds.indexOf(art.id) !== -1);
+        return renderArtworkCard(art, false);
       }).join('');
 
       if (resultsCount) {
@@ -218,51 +175,77 @@
     // Filter pill clicks
     pills.forEach(function (pill) {
       pill.addEventListener('click', function () {
-        currentCategory = this.dataset.category === 'all' ? '' : (this.dataset.category || '');
+        currentCategory = this.dataset.category || '';
         pills.forEach(function (p) { p.classList.toggle('active', p === pill); });
         renderGallery();
       });
     });
 
-    if (gallerySearch) {
-      gallerySearch.addEventListener('input', function () {
-        currentSearch = this.value;
-        renderGallery();
-      });
-    }
-
-    if (artistFilter) {
-      artistFilter.addEventListener('change', function () {
-        currentArtist = this.value;
-        renderGallery();
-      });
-    }
-
-    if (sortSelect) {
-      sortSelect.addEventListener('change', function () {
-        currentSort = this.value;
-        renderGallery();
-      });
-    }
-
-    if (clearFiltersBtn) {
-      clearFiltersBtn.addEventListener('click', function (e) {
-        e.preventDefault();
-        currentCategory = '';
-        currentArtist = '';
-        currentSearch = '';
-        currentSort = 'default';
-        if (gallerySearch) gallerySearch.value = '';
-        if (artistFilter) artistFilter.value = '';
-        if (sortSelect) sortSelect.value = 'default';
-        pills.forEach(function (p) {
-          p.classList.toggle('active', p.dataset.category === 'all' || !p.dataset.category);
-        });
-        renderGallery();
-      });
-    }
-
     renderGallery();
+
+    // ---- Artwork Modal ----
+    var artworkModal = document.getElementById('artworkModal');
+    var modalClose = document.getElementById('modalClose');
+
+    if (artworkModal) {
+      // Click on card to open modal
+      galleryGrid.addEventListener('click', function (e) {
+        var card = e.target.closest('.artwork-card');
+        if (!card) return;
+        e.preventDefault();
+        var link = card.querySelector('.card-link');
+        if (!link) return;
+        var href = link.getAttribute('href');
+        var idMatch = href.match(/id=([^&]+)/);
+        if (!idMatch) return;
+        openArtworkModal(idMatch[1]);
+      });
+
+      function openArtworkModal(id) {
+        var art = KaysData.getArtwork(id);
+        if (!art) return;
+        var artist = KaysData.getArtist(art.artistId);
+        var base = window.PAGE_BASE || '';
+
+        document.getElementById('modalImage').src = resolveImageSrc(art.imageLg || art.image);
+        document.getElementById('modalImage').alt = art.title;
+        document.getElementById('modalTitle').textContent = art.title;
+        document.getElementById('modalArtist').textContent = artist ? artist.name : '';
+        document.getElementById('modalYear').textContent = art.year;
+        document.getElementById('modalDesc').textContent = art.description;
+        document.getElementById('modalSpecs').innerHTML =
+          '<p><strong>Medium:</strong> ' + art.medium + '</p>' +
+          '<p><strong>Dimensions:</strong> ' + art.dimensions + '</p>';
+
+        var tag = document.getElementById('modalMediaTag');
+        tag.textContent = capitalize(art.category);
+        tag.className = 'media-tag tag-' + art.category;
+
+        document.getElementById('modalDetailLink').href = base + 'artwork.html?id=' + art.id;
+
+        var artistLink = document.getElementById('modalArtistLink');
+        if (artist && artistLink) {
+          artistLink.href = base + 'artist.html?id=' + artist.id;
+          artistLink.style.display = '';
+        } else if (artistLink) {
+          artistLink.style.display = 'none';
+        }
+
+        artworkModal.removeAttribute('hidden');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeArtworkModal() {
+        artworkModal.setAttribute('hidden', '');
+        document.body.style.overflow = '';
+      }
+
+      if (modalClose) modalClose.addEventListener('click', closeArtworkModal);
+      artworkModal.querySelector('.modal-backdrop').addEventListener('click', closeArtworkModal);
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && !artworkModal.hasAttribute('hidden')) closeArtworkModal();
+      });
+    }
   }
 
   /* ========================================
@@ -308,12 +291,26 @@
       });
       document.head.appendChild(jsonLd);
 
+      var featuredBadge = artwork.featured ? '<span class="badge-featured">Featured</span> ' : '';
+
+      // Exhibition cross-links
+      var exhibitionLinks = '';
+      var artExhibitions = KaysData.getExhibitionsByArtwork(artwork.id);
+      if (artExhibitions.length > 0) {
+        exhibitionLinks = '<div class="detail-exhibitions"><h3>Featured in Exhibitions</h3><ul>';
+        for (var ei = 0; ei < artExhibitions.length; ei++) {
+          exhibitionLinks += '<li><a href="' + (window.PAGE_BASE || '') + 'exhibition.html?id=' + artExhibitions[ei].id + '">' + artExhibitions[ei].title + '</a></li>';
+        }
+        exhibitionLinks += '</ul></div>';
+      }
+
       artworkDetail.innerHTML =
         '<div class="detail-layout">' +
           '<div class="detail-image-wrap">' +
             '<img src="' + resolveImageSrc(artwork.imageLg) + '" alt="' + artwork.title + '" class="detail-image artwork-detail-image">' +
           '</div>' +
           '<div class="detail-info">' +
+            featuredBadge +
             '<span class="media-tag tag-' + artwork.category + '">' + capitalize(artwork.category) + '</span>' +
             '<h1 class="detail-title">' + artwork.title + '</h1>' +
             '<p class="detail-artist-year">' + (artist ? artist.name : '') + ' &middot; ' + artwork.year + '</p>' +
@@ -330,7 +327,8 @@
           '<div class="detail-about-artist">' +
             '<h3>About the Artist</h3>' +
             '<p>' + artist.shortBio + ' <a href="' + (window.PAGE_BASE || '') + 'artist.html?id=' + artist.id + '">View full profile &rarr;</a></p>' +
-          '</div>' : '');
+          '</div>' : '') +
+        exhibitionLinks;
 
       // Update breadcrumb title
       var breadcrumbTitle = document.getElementById('breadcrumbTitle');
@@ -397,28 +395,42 @@
      PAGE: All Artists
      ======================================== */
   var allArtistsGrid = document.getElementById('allArtistsGrid');
-  var artistSearch = document.getElementById('artistSearch');
-  var artistResultsCount = document.getElementById('artistResultsCount');
-
   if (allArtistsGrid) {
     var artistsEmpty = document.getElementById('artistsEmpty');
-    var clearArtistSearch = document.getElementById('clearArtistSearch');
+    var artistResultsCount = document.getElementById('artistResultsCount');
+    var artistAlphaFilter = document.getElementById('artistAlphaFilter');
+    var artistMediaFilter = document.getElementById('artistMediaFilter');
 
-    function renderArtists(query) {
-      var q = query ? query.toLowerCase() : '';
+    function getAlphaRange(range) {
+      if (!range) return null;
+      var parts = range.split('-');
+      return { start: parts[0].trim(), end: parts[1].trim() };
+    }
+
+    function artistInRange(name, range) {
+      if (!range) return true;
+      var first = name.charAt(0).toUpperCase();
+      return first >= range.start && first <= range.end;
+    }
+
+    function renderArtists() {
+      var range = artistAlphaFilter ? getAlphaRange(artistAlphaFilter.value) : null;
+      var mediaVal = artistMediaFilter ? artistMediaFilter.value : '';
       var filtered = [];
+
       for (var k = 0; k < KaysData.artists.length; k++) {
         var ar = KaysData.artists[k];
-        if (!q || ar.name.toLowerCase().indexOf(q) !== -1 || ar.media.toLowerCase().indexOf(q) !== -1) {
-          filtered.push(ar);
-        }
+        if (!artistInRange(ar.name, range)) continue;
+        if (mediaVal && ar.media.toLowerCase().indexOf(mediaVal) === -1) continue;
+        filtered.push(ar);
       }
 
-      var allHtml = '';
-      for (var m = 0; m < filtered.length; m++) {
-        allHtml += renderArtistCard(filtered[m]);
-      }
-      allArtistsGrid.innerHTML = allHtml;
+      // Sort alphabetically
+      filtered.sort(function (a, b) { return a.name.localeCompare(b.name); });
+
+      allArtistsGrid.innerHTML = filtered.map(function (artist) {
+        return renderArtistCard(artist);
+      }).join('');
 
       if (artistResultsCount) {
         artistResultsCount.textContent = filtered.length + ' artist' + (filtered.length !== 1 ? 's' : '');
@@ -430,21 +442,14 @@
       }
     }
 
-    if (artistSearch) {
-      artistSearch.addEventListener('input', function () {
-        renderArtists(this.value.trim());
-      });
+    if (artistAlphaFilter) {
+      artistAlphaFilter.addEventListener('change', renderArtists);
+    }
+    if (artistMediaFilter) {
+      artistMediaFilter.addEventListener('change', renderArtists);
     }
 
-    if (clearArtistSearch) {
-      clearArtistSearch.addEventListener('click', function (e) {
-        e.preventDefault();
-        if (artistSearch) artistSearch.value = '';
-        renderArtists('');
-      });
-    }
-
-    renderArtists('');
+    renderArtists();
   }
 
   /* ========================================
@@ -492,6 +497,17 @@
         worksHtml += renderArtworkCard(works[w]);
       }
 
+      // Exhibition cross-links for artist
+      var artistExhibitions = KaysData.getExhibitionsByArtist(a.id);
+      var artistExhibHtml = '';
+      if (artistExhibitions.length > 0) {
+        artistExhibHtml = '<section class="detail-exhibitions" style="margin-top:2.5rem;"><h2 class="section-heading" style="font-size:1.6rem;margin-bottom:1rem;">Exhibitions</h2><ul>';
+        for (var ae = 0; ae < artistExhibitions.length; ae++) {
+          artistExhibHtml += '<li><a href="' + (window.PAGE_BASE || '') + 'exhibition.html?id=' + artistExhibitions[ae].id + '">' + artistExhibitions[ae].title + '</a></li>';
+        }
+        artistExhibHtml += '</ul></section>';
+      }
+
       artistDetail.innerHTML =
         '<div class="profile-header artist-hero-banner">' +
           '<img src="' + a.photo + '" alt="' + a.name + '" class="profile-photo">' +
@@ -504,7 +520,8 @@
         '<section class="profile-works">' +
           '<h2 class="section-heading" style="font-size:1.6rem;margin-bottom:1.5rem;">Works in Gallery</h2>' +
           '<div class="artwork-grid">' + worksHtml + '</div>' +
-        '</section>';
+        '</section>' +
+        artistExhibHtml;
 
       // Update breadcrumb title
       var aBreadcrumb = document.getElementById('breadcrumbTitle');
@@ -517,6 +534,114 @@
           '<a href="' + (window.PAGE_BASE || '') + 'artists.html" class="btn btn-primary">Back to Artists</a>' +
         '</div>';
     }
+  }
+
+  /* ========================================
+     PAGE: Exhibitions Listing
+     ======================================== */
+  var exhibitionsList = document.getElementById('exhibitionsList');
+  if (exhibitionsList) {
+    var exhbs = KaysData.getExhibitions();
+    var exhibitionsEmpty = document.getElementById('exhibitionsEmpty');
+
+    if (exhbs.length > 0) {
+      var exHtml = '';
+      for (var xi = 0; xi < exhbs.length; xi++) {
+        var ex = exhbs[xi];
+        var base = window.PAGE_BASE || '';
+        // Format dates
+        var dateRange = formatExhibitionDate(ex.startDate) + ' \u2013 ' + formatExhibitionDate(ex.endDate);
+        // Get first artwork as cover thumbnail
+        var thumbsHtml = '';
+        var coverArt = KaysData.getArtwork(ex.artworkIds[0]);
+        if (coverArt) {
+          thumbsHtml = '<img src="' + resolveImageSrc(coverArt.image) + '" alt="' + coverArt.title + '" class="exhibition-thumb" loading="lazy">';
+        }
+        exHtml += '<article class="exhibition-card">' +
+          '<a href="' + base + 'exhibition.html?id=' + ex.id + '" class="exhibition-card-link">' +
+            '<div class="exhibition-thumbs">' + thumbsHtml + '</div>' +
+            '<div class="exhibition-card-info">' +
+              '<h2 class="exhibition-card-title">' + ex.title + '</h2>' +
+              '<p class="exhibition-card-dates">' + dateRange + '</p>' +
+              '<p class="exhibition-card-desc">' + ex.description + '</p>' +
+              '<span class="exhibition-card-cta">View Exhibition &rarr;</span>' +
+            '</div>' +
+          '</a>' +
+        '</article>';
+      }
+      exhibitionsList.innerHTML = exHtml;
+    } else if (exhibitionsEmpty) {
+      exhibitionsEmpty.style.display = 'block';
+    }
+  }
+
+  /* ========================================
+     PAGE: Exhibition Detail
+     ======================================== */
+  var exhibitionDetail = document.getElementById('exhibitionDetail');
+  if (exhibitionDetail) {
+    var exId = getParam('id');
+    var exhibition = exId ? KaysData.getExhibition(exId) : null;
+
+    if (exhibition) {
+      var dateRange = formatExhibitionDate(exhibition.startDate) + ' \u2013 ' + formatExhibitionDate(exhibition.endDate);
+
+      document.title = exhibition.title + ' \u2014 Kay\'s Originals';
+
+      var breadcrumbTitle = document.getElementById('breadcrumbTitle');
+      if (breadcrumbTitle) breadcrumbTitle.textContent = exhibition.title;
+
+      exhibitionDetail.innerHTML =
+        '<h1>' + exhibition.title + '</h1>' +
+        '<p class="exhibition-dates">' + dateRange + '</p>' +
+        '<p class="exhibition-description">' + exhibition.description + '</p>' +
+        '<p class="exhibition-disclaimer">' + exhibition.disclaimer + '</p>';
+
+      // Render artwork grid
+      var artSection = document.getElementById('exhibitionArtwork');
+      var artGrid = document.getElementById('exhibitionArtGrid');
+      if (artSection && artGrid && exhibition.artworkIds.length > 0) {
+        var artHtml = '';
+        for (var ai = 0; ai < exhibition.artworkIds.length; ai++) {
+          var artwork = KaysData.getArtwork(exhibition.artworkIds[ai]);
+          if (artwork) artHtml += renderArtworkCard(artwork, false);
+        }
+        artGrid.innerHTML = artHtml;
+        artSection.style.display = '';
+      }
+
+      // Render artist grid
+      var artistSection = document.getElementById('exhibitionArtists');
+      var artistGrid = document.getElementById('exhibitionArtistGrid');
+      if (artistSection && artistGrid && exhibition.artistIds.length > 0) {
+        var arHtml = '';
+        for (var ari = 0; ari < exhibition.artistIds.length; ari++) {
+          var artist = KaysData.getArtist(exhibition.artistIds[ari]);
+          if (artist) arHtml += renderArtistCard(artist);
+        }
+        artistGrid.innerHTML = arHtml;
+        artistSection.style.display = '';
+      }
+    } else {
+      exhibitionDetail.innerHTML =
+        '<div class="not-found">' +
+          '<h2>Exhibition Not Found</h2>' +
+          '<p>The exhibition you are looking for does not exist.</p>' +
+          '<a href="' + (window.PAGE_BASE || '') + 'exhibitions.html" class="btn btn-primary">Back to Exhibitions</a>' +
+        '</div>';
+    }
+  }
+
+  /* ---- Date formatting helper ---- */
+  function formatExhibitionDate(isoDate) {
+    var d = new Date(isoDate + 'T12:00:00');
+    var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    var day = d.getDate();
+    var suffix = (day === 1 || day === 21 || day === 31) ? 'st' :
+                 (day === 2 || day === 22) ? 'nd' :
+                 (day === 3 || day === 23) ? 'rd' : 'th';
+    return days[d.getDay()] + ', ' + months[d.getMonth()] + ' ' + day + suffix;
   }
 
   /* ========================================
@@ -544,33 +669,20 @@
   var contactForm = document.getElementById('contactForm');
   if (contactForm) {
     var formSuccess = document.getElementById('formSuccess');
+    var artistNote = document.getElementById('artistNote');
+    var visitorRadios = contactForm.querySelectorAll('input[name="visitor-type"]');
+    visitorRadios.forEach(function (radio) {
+      radio.addEventListener('change', function () {
+        if (artistNote) {
+          artistNote.style.display = this.value === 'artist' ? 'block' : 'none';
+        }
+      });
+    });
 
     contactForm.addEventListener('submit', function (e) {
       e.preventDefault();
-
-      // Clear previous errors
-      contactForm.querySelectorAll('.form-error-msg').forEach(function (el) { el.remove(); });
-      contactForm.querySelectorAll('.form-group.has-error').forEach(function (el) { el.classList.remove('has-error'); });
-
-      var valid = true;
-      contactForm.querySelectorAll('[required]').forEach(function (field) {
-        if (!field.value.trim()) {
-          valid = false;
-          var group = field.closest('.form-group');
-          if (group) {
-            group.classList.add('has-error');
-            var err = document.createElement('div');
-            err.className = 'form-error-msg';
-            err.textContent = 'This field is required.';
-            group.appendChild(err);
-          }
-        }
-      });
-
-      if (valid) {
-        contactForm.reset();
-        if (formSuccess) formSuccess.style.display = 'block';
-      }
+      contactForm.reset();
+      if (formSuccess) formSuccess.style.display = 'block';
     });
   }
 
@@ -609,6 +721,38 @@
       link.addEventListener('click', closeMenu);
     });
   }
+
+  /* ---- Nav dropdown toggle (click for mobile/accessibility) ---- */
+  document.querySelectorAll('.has-dropdown').forEach(function (item) {
+    var toggle = item.querySelector('.dropdown-toggle');
+    if (!toggle) return;
+    toggle.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var isOpen = item.classList.contains('open');
+      // Close any other open dropdowns
+      document.querySelectorAll('.has-dropdown.open').forEach(function (other) {
+        if (other !== item) {
+          other.classList.remove('open');
+          var t = other.querySelector('.dropdown-toggle');
+          if (t) t.setAttribute('aria-expanded', 'false');
+        }
+      });
+      item.classList.toggle('open', !isOpen);
+      toggle.setAttribute('aria-expanded', String(!isOpen));
+    });
+  });
+
+  // Close dropdown when clicking outside
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest('.has-dropdown')) {
+      document.querySelectorAll('.has-dropdown.open').forEach(function (item) {
+        item.classList.remove('open');
+        var t = item.querySelector('.dropdown-toggle');
+        if (t) t.setAttribute('aria-expanded', 'false');
+      });
+    }
+  });
 
   /* ---- Close mobile menu on resize ---- */
   window.addEventListener('resize', function () {

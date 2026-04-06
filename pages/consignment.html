@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Consignment — Kay's Originals</title>
+  <title>For Artists — Kay's Originals</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -24,18 +24,25 @@
     <div class="nav-inner">
       <a href="../index.html" class="nav-brand">
         <img src="../images/KaysOrigLogo.png" alt="Kay's Originals" class="nav-logo">
-        <span class="nav-slogan">Discover Original Art</span>
+        <span class="nav-slogan">For Artists</span>
       </a>
       <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
       <ul class="nav-links" id="navLinks">
-        <li><a href="gallery.html" class="nav-link">Gallery</a></li>
+        <li class="has-dropdown">
+          <button class="dropdown-toggle nav-link" aria-haspopup="true" aria-expanded="false">Artwork</button>
+          <ul class="dropdown" role="menu">
+            <li><a href="gallery.html?category=painting" class="nav-link">Paintings</a></li>
+            <li><a href="gallery.html?category=sculpture" class="nav-link">Sculptures</a></li>
+            <li><a href="gallery.html?category=sketch" class="nav-link">Sketches</a></li>
+          </ul>
+        </li>
         <li><a href="artists.html" class="nav-link">Artists</a></li>
-        <li><a href="consignment.html" class="nav-link">Consignment</a></li>
+        <li><a href="exhibitions.html" class="nav-link">Exhibitions</a></li>
         <li><a href="about.html" class="nav-link">About</a></li>
+        <li><a href="consignment.html" class="nav-link">For Artists</a></li>
         <li><a href="contact.html" class="nav-link">Contact</a></li>
-        <li><a href="artist-login.html" class="nav-link nav-link-login">Artist Login</a></li>
       </ul>
     </div>
   </nav>
@@ -77,6 +84,27 @@
           <p>Accepted artists become part of the Kay's Originals family. Your work is featured on our website and in our Austin gallery space.</p>
         </div>
 
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CONTACT ===== -->
+  <section class="consignment-contact" style="padding:1.5rem 0;background:var(--light-gray);">
+    <div class="section-inner">
+      <h2 class="section-heading" style="font-size:1.2rem;margin-bottom:0.75rem;">Have Questions? Reach Out Directly</h2>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;">
+        <div class="info-block">
+          <h4>Email</h4>
+          <p><a href="mailto:applications@kaysoriginals.com">applications@kaysoriginals.com</a></p>
+        </div>
+        <div class="info-block">
+          <h4>Phone</h4>
+          <p><a href="tel:+15550123456">(555) 012-3456</a></p>
+        </div>
+        <div class="info-block">
+          <h4>Location</h4>
+          <p>1234 Gallery Lane, Suite 100<br>Austin, TX 78701</p>
+        </div>
       </div>
     </div>
   </section>
@@ -148,7 +176,7 @@
         <h4>Company</h4>
         <ul>
           <li><a href="about.html">About Us</a></li>
-          <li><a href="consignment.html">Consignment</a></li>
+          <li><a href="consignment.html">For Artists</a></li>
           <li><a href="contact.html">Contact</a></li>
           <li><a href="faq.html">FAQ</a></li>
         </ul>
@@ -157,7 +185,7 @@
         <h4>Get in Touch</h4>
         <p><strong>Email</strong><br><a href="mailto:info@kaysoriginals.com">info@kaysoriginals.com</a></p>
         <p><strong>Phone</strong><br><a href="tel:+15550123456">(555) 012-3456</a></p>
-        <p><strong>Location</strong><br>Austin, TX</p>
+        <p><strong>Location</strong><br><a href="https://maps.google.com/?q=1234+Gallery+Lane+Suite+100+Austin+TX+78701" target="_blank" rel="noopener">1234 Gallery Lane, Suite 100<br>Austin, TX 78701</a></p>
       </div>
     </div>
     <div class="footer-bottom">

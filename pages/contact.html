@@ -24,18 +24,25 @@
     <div class="nav-inner">
       <a href="../index.html" class="nav-brand">
         <img src="../images/KaysOrigLogo.png" alt="Kay's Originals" class="nav-logo">
-        <span class="nav-slogan">Discover Original Art</span>
+        <span class="nav-slogan">Get in Touch</span>
       </a>
       <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
       <ul class="nav-links" id="navLinks">
-        <li><a href="gallery.html" class="nav-link">Gallery</a></li>
+        <li class="has-dropdown">
+          <button class="dropdown-toggle nav-link" aria-haspopup="true" aria-expanded="false">Artwork</button>
+          <ul class="dropdown" role="menu">
+            <li><a href="gallery.html?category=painting" class="nav-link">Paintings</a></li>
+            <li><a href="gallery.html?category=sculpture" class="nav-link">Sculptures</a></li>
+            <li><a href="gallery.html?category=sketch" class="nav-link">Sketches</a></li>
+          </ul>
+        </li>
         <li><a href="artists.html" class="nav-link">Artists</a></li>
-        <li><a href="consignment.html" class="nav-link">Consignment</a></li>
+        <li><a href="exhibitions.html" class="nav-link">Exhibitions</a></li>
         <li><a href="about.html" class="nav-link">About</a></li>
+        <li><a href="consignment.html" class="nav-link">For Artists</a></li>
         <li><a href="contact.html" class="nav-link">Contact</a></li>
-        <li><a href="artist-login.html" class="nav-link nav-link-login">Artist Login</a></li>
       </ul>
     </div>
   </nav>
@@ -54,12 +61,41 @@
     <div class="section-inner">
       <div class="contact-layout">
 
+        <div class="contact-info">
+          <h2>Gallery Information</h2>
+          <div class="info-block">
+            <h4>Email</h4>
+            <p><a href="mailto:info@kaysoriginals.com">info@kaysoriginals.com</a></p>
+          </div>
+          <div class="info-block">
+            <h4>Phone</h4>
+            <p><a href="tel:+15550123456">(555) 012-3456</a></p>
+          </div>
+          <div class="info-block">
+            <h4>Location</h4>
+            <p>Austin, TX</p>
+          </div>
+          <div class="info-block">
+            <h4>Gallery Hours</h4>
+            <p>Tuesday – Saturday: 10am – 6pm<br>
+               Sunday: 12pm – 5pm<br>
+               Monday: Closed</p>
+          </div>
+        </div>
+
         <div class="contact-form">
           <h2>Send a Message</h2>
-          <p style="font-size: 0.92rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
-            Looking to show your work at our gallery? <a href="artist-signup.html" style="color: var(--blue); font-weight: 500;">Apply here</a>
-          </p>
           <form id="contactForm">
+            <div class="form-group">
+              <label>I am a...</label>
+              <div class="radio-group">
+                <label class="radio-label"><input type="radio" name="visitor-type" value="customer" required> Customer or Art Enthusiast</label>
+                <label class="radio-label"><input type="radio" name="visitor-type" value="artist"> Artist Interested in Showing Work</label>
+              </div>
+              <p id="artistNote" class="artist-redirect-note" style="display:none; margin-top: 0.5rem; font-size: 0.88rem; color: var(--text-secondary);">
+                Looking to apply as an artist? <a href="artist-signup.html" style="color: var(--blue); font-weight: 500;">Download our application form</a> instead.
+              </p>
+            </div>
             <div class="form-group">
               <label for="contactName">Name</label>
               <input type="text" id="contactName" name="name" required placeholder="Your full name">
@@ -85,28 +121,6 @@
               <p>Thank you! Your message has been sent. We'll be in touch soon.</p>
             </div>
           </form>
-        </div>
-
-        <div class="contact-info">
-          <h2>Gallery Information</h2>
-          <div class="info-block">
-            <h4>Email</h4>
-            <p><a href="mailto:info@kaysoriginals.com">info@kaysoriginals.com</a></p>
-          </div>
-          <div class="info-block">
-            <h4>Phone</h4>
-            <p><a href="tel:+15550123456">(555) 012-3456</a></p>
-          </div>
-          <div class="info-block">
-            <h4>Location</h4>
-            <p>Austin, TX</p>
-          </div>
-          <div class="info-block">
-            <h4>Gallery Hours</h4>
-            <p>Tuesday – Saturday: 10am – 6pm<br>
-               Sunday: 12pm – 5pm<br>
-               Monday: Closed</p>
-          </div>
         </div>
 
       </div>
@@ -136,7 +150,7 @@
         <h4>Company</h4>
         <ul>
           <li><a href="about.html">About Us</a></li>
-          <li><a href="consignment.html">Consignment</a></li>
+          <li><a href="consignment.html">For Artists</a></li>
           <li><a href="contact.html">Contact</a></li>
           <li><a href="faq.html">FAQ</a></li>
         </ul>
@@ -145,7 +159,7 @@
         <h4>Get in Touch</h4>
         <p><strong>Email</strong><br><a href="mailto:info@kaysoriginals.com">info@kaysoriginals.com</a></p>
         <p><strong>Phone</strong><br><a href="tel:+15550123456">(555) 012-3456</a></p>
-        <p><strong>Location</strong><br>Austin, TX</p>
+        <p><strong>Location</strong><br><a href="https://maps.google.com/?q=1234+Gallery+Lane+Suite+100+Austin+TX+78701" target="_blank" rel="noopener">1234 Gallery Lane, Suite 100<br>Austin, TX 78701</a></p>
       </div>
     </div>
     <div class="footer-bottom">
