@@ -126,6 +126,18 @@
     }
   }
 
+  var homeFeaturedGrid = document.getElementById('homeFeaturedGrid');
+  if (homeFeaturedGrid) {
+    var pool = KaysData.artworks.slice();
+    pool.sort(function(a, b) { return (b.featured ? 1 : 0) - (a.featured ? 1 : 0); });
+    var picks = pool.slice(0, 3);
+    var stripHtml = '';
+    for (var s = 0; s < picks.length; s++) {
+      stripHtml += renderArtworkCard(picks[s], false);
+    }
+    homeFeaturedGrid.innerHTML = stripHtml;
+  }
+
   /* ========================================
      PAGE: Gallery
      ======================================== */

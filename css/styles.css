@@ -1310,6 +1310,177 @@ body[data-page="artists"] .artist-link {
   filter: grayscale(20%);
 }
 
+/* ===== Home: Step Inside ===== */
+.home-interior {
+  padding: 4rem 0 2rem;
+  background: var(--bg-alt, #faf8f4);
+}
+.home-interior-head {
+  max-width: 720px;
+  margin: 0 auto 2.25rem;
+  text-align: center;
+}
+.home-interior-head h2 {
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  line-height: 1.15;
+  margin: 0.4rem 0 0.75rem;
+}
+.home-interior-sub,
+.home-strip-sub {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--ink-soft, #555);
+  margin: 0;
+}
+.home-interior-media {
+  display: block;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.08);
+  position: relative;
+}
+.home-interior-media img {
+  width: 100%;
+  height: auto;
+  display: block;
+  aspect-ratio: 21 / 9;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.home-interior-media:hover img {
+  transform: scale(1.02);
+}
+
+/* ===== Home: Featured Artwork Strip ===== */
+.home-featured-strip {
+  padding: 4rem 0 5rem;
+}
+.home-strip-head {
+  max-width: 720px;
+  margin: 0 auto 2.5rem;
+  text-align: center;
+}
+.home-strip-head h2 {
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  line-height: 1.15;
+  margin: 0.4rem 0 0.75rem;
+}
+.home-strip-cta {
+  text-align: center;
+  margin-top: 2.75rem;
+}
+
+/* ===== About: Services + Leadership ===== */
+.about-services {
+  padding: 4rem 0;
+  background: var(--bg-alt, #faf8f4);
+}
+.about-services-head {
+  max-width: 720px;
+  margin: 0 auto 2.5rem;
+  text-align: center;
+}
+.about-services-head h2 {
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 4vw, 2.5rem);
+  line-height: 1.15;
+  margin: 0.4rem 0 0.75rem;
+}
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 2rem;
+}
+.service-item {
+  background: var(--white);
+  padding: 2rem 1.75rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.service-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.08);
+}
+.service-item h3 {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  line-height: 1.2;
+  margin: 0 0 0.6rem;
+}
+.service-item p {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--ink-soft, #555);
+  margin: 0;
+}
+
+.about-team {
+  padding: 4rem 0;
+}
+.about-team-head {
+  max-width: 720px;
+  margin: 0 auto 2.5rem;
+  text-align: center;
+}
+.about-team-head h2 {
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 4vw, 2.5rem);
+  line-height: 1.15;
+  margin: 0.4rem 0 0.75rem;
+}
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 360px));
+  gap: 2.5rem;
+  justify-content: center;
+}
+.team-member {
+  text-align: center;
+  padding: 2rem 1.5rem;
+}
+.team-member h3 {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  line-height: 1.2;
+  margin: 0 0 0.3rem;
+}
+.team-role {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--teal, #2a7a7a);
+  margin-bottom: 1rem;
+}
+.team-member p {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--ink-soft, #555);
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .home-interior,
+  .home-featured-strip,
+  .about-services,
+  .about-team {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  .home-interior-media img {
+    aspect-ratio: 4 / 3;
+  }
+}
+
 .detail-sold {
   display: flex;
   align-items: center;
