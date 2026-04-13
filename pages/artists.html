@@ -59,23 +59,12 @@
   <section class="page-content">
     <div class="section-inner">
       <div class="artist-filter-row">
-        <select id="artistAlphaFilter" class="gallery-select" aria-label="Filter artists by name">
-          <option value="">All Artists (A-Z)</option>
-          <option value="A-C">A - C</option>
-          <option value="D-F">D - F</option>
-          <option value="G-I">G - I</option>
-          <option value="J-L">J - L</option>
-          <option value="M-O">M - O</option>
-          <option value="P-R">P - R</option>
-          <option value="S-U">S - U</option>
-          <option value="V-Z">V - Z</option>
-        </select>
-        <select id="artistMediaFilter" class="gallery-select" aria-label="Filter by specialty">
-          <option value="">All Specialties</option>
-          <option value="painting">Painters</option>
-          <option value="sculpture">Sculptors</option>
-          <option value="sketch">Sketch Artists</option>
-        </select>
+        <div class="filter-pills-row">
+          <button class="filter-pill active" data-media="all">All</button>
+          <button class="filter-pill" data-media="painting">Paintings</button>
+          <button class="filter-pill" data-media="sculpture">Sculptures</button>
+          <button class="filter-pill" data-media="sketch">Sketches</button>
+        </div>
         <span id="artistResultsCount" class="results-count"></span>
       </div>
       <div id="allArtistsGrid" class="artist-grid"></div>
@@ -93,24 +82,6 @@
         <img src="../images/KaysOrigLogo.png" alt="Kay's Originals" class="footer-logo">
         <p class="footer-slogan">Discover Original Art</p>
         <p class="footer-tagline">A curated gallery celebrating bold, original artwork from visionary artists.</p>
-      </div>
-      <div class="footer-links">
-        <h4>Explore</h4>
-        <ul>
-          <li><a href="gallery.html?category=painting">Paintings</a></li>
-          <li><a href="gallery.html?category=sculpture">Sculptures</a></li>
-          <li><a href="gallery.html?category=sketch">Sketches</a></li>
-          <li><a href="gallery.html">All Artwork</a></li>
-        </ul>
-      </div>
-      <div class="footer-links">
-        <h4>Company</h4>
-        <ul>
-          <li><a href="about.html">About Us</a></li>
-          <li><a href="consignment.html">For Artists</a></li>
-          <li><a href="contact.html">Contact</a></li>
-          <li><a href="faq.html">FAQ</a></li>
-        </ul>
       </div>
       <div class="footer-contact">
         <h4>Get in Touch</h4>

@@ -43,7 +43,7 @@ var KaysData = (function () {
       id: 'davinci',
       name: 'Leonardo da Vinci',
       media: 'Painting & Sketching',
-      photo: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=400&h=400&fit=crop',
+      photo: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400&h=400&fit=crop',
       bio: 'Leonardo di ser Piero da Vinci (1452\u20131519) was an Italian polymath of the High Renaissance whose interests spanned painting, sculpture, architecture, science, music, mathematics, and engineering. Often described as the archetype of the Renaissance Man, Leonardo is celebrated for masterpieces such as the Mona Lisa and The Last Supper. His notebooks, filled with meticulous anatomical studies, inventive sketches, and scientific observations, reveal a mind of unparalleled curiosity. Leonardo\'s ability to merge art with science set a standard for creative inquiry that endures to this day.',
       shortBio: 'Italian Renaissance polymath whose paintings, anatomical sketches, and inventive notebooks defined the ideal of the universal genius.'
     },

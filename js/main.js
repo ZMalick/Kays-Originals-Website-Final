@@ -33,8 +33,8 @@
     };
     var target = map[page];
     if (!target) return;
-    // Check regular nav links
-    document.querySelectorAll('.nav-link').forEach(function (link) {
+    // Check top-level nav links only (skip dropdown children so they don't all highlight on gallery.html)
+    document.querySelectorAll('.nav-links > li > .nav-link').forEach(function (link) {
       link.classList.remove('active');
       var href = link.getAttribute('href');
       if (href && href.indexOf(target) !== -1) {
@@ -45,6 +45,30 @@
     if (target === 'gallery.html') {
       var toggle = document.querySelector('.dropdown-toggle');
       if (toggle) toggle.classList.add('active');
+
+      // Highlight the matching dropdown child (Paintings / Sculptures / Sketches / All)
+      var dropdownLinks = document.querySelectorAll('.dropdown .nav-link');
+      dropdownLinks.forEach(function (link) { link.classList.remove('active'); });
+      var catMatch = window.location.search.match(/category=([^&]+)/);
+      var activeHrefFragment;
+      if (catMatch) {
+        activeHrefFragment = 'category=' + catMatch[1];
+      } else if (page === 'gallery' || page === 'artwork') {
+        activeHrefFragment = 'gallery.html';
+      }
+      if (activeHrefFragment) {
+        dropdownLinks.forEach(function (link) {
+          var href = link.getAttribute('href') || '';
+          if (catMatch) {
+            if (href.indexOf(activeHrefFragment) !== -1) link.classList.add('active');
+          } else {
+            // No category = "All Artwork" — match the link that has no ?category
+            if (href.indexOf('category=') === -1 && href.indexOf('gallery.html') !== -1) {
+              link.classList.add('active');
+            }
+          }
+        });
+      }
     }
   })();
 
@@ -70,6 +94,8 @@
     var priceHtml = '';
     if (!art.inPermanentCollection && art.price != null) {
       priceHtml = '<span class="card-price">$' + art.price.toLocaleString('en-US') + '</span>';
+    } else if (art.inPermanentCollection) {
+      priceHtml = '<span class="card-permanent">Permanent Collection</span>';
     }
 
     return '<article class="artwork-card" data-artwork-id="' + art.id + '">' +
@@ -162,11 +188,41 @@
     var galleryEmpty = document.getElementById('galleryEmpty');
     var pills = document.querySelectorAll('.filter-pill');
     var resultsCount = document.getElementById('resultsCount');
+    var galleryArtistFilter = document.getElementById('galleryArtistFilter');
+    var galleryDecadeFilter = document.getElementById('galleryDecadeFilter');
+
+    // Populate artist filter
+    if (galleryArtistFilter) {
+      var artistList = KaysData.getArtistList();
+      for (var ai = 0; ai < artistList.length; ai++) {
+        var aOpt = document.createElement('option');
+        aOpt.value = artistList[ai].id;
+        aOpt.textContent = artistList[ai].name;
+        galleryArtistFilter.appendChild(aOpt);
+      }
+    }
+
+    // Populate decade filter
+    if (galleryDecadeFilter) {
+      var decades = KaysData.getDecades();
+      for (var di = 0; di < decades.length; di++) {
+        var dOpt = document.createElement('option');
+        dOpt.value = decades[di];
+        dOpt.textContent = decades[di] + 's';
+        galleryDecadeFilter.appendChild(dOpt);
+      }
+    }
 
     // Read category from URL param (from nav dropdown)
     var rawCat = getParam('category') || '';
     var showAll = rawCat === 'all';
     var currentCategory = showAll ? '' : (rawCat || 'painting');
+
+    // Read artistId URL param — preselect artist filter if present
+    var rawArtistId = getParam('artistId') || '';
+    if (rawArtistId && galleryArtistFilter) {
+      galleryArtistFilter.value = rawArtistId;
+    }
 
     // If URL has a specific category, set the matching pill active; otherwise default to first pill
     pills.forEach(function (p) {
@@ -178,11 +234,30 @@
       if (firstPill) firstPill.classList.add('active');
     }
 
+    // If artistId param, clear category filter to show all of that artist's work
+    if (rawArtistId) {
+      currentCategory = '';
+      pills.forEach(function (p) { p.classList.remove('active'); });
+    }
+
     function renderGallery() {
       var artworks = KaysData.artworks.slice();
+      var filterArtistId = galleryArtistFilter ? galleryArtistFilter.value : '';
+      var filterDecade = galleryDecadeFilter ? galleryDecadeFilter.value : '';
 
       if (currentCategory) {
         artworks = artworks.filter(function (a) { return a.category === currentCategory; });
+      }
+
+      if (filterArtistId) {
+        artworks = artworks.filter(function (a) { return a.artistId === filterArtistId; });
+      }
+
+      if (filterDecade) {
+        artworks = artworks.filter(function (a) {
+          var decade = filterDecade;
+          return a.year && Math.floor(a.year / 10) * 10 === parseInt(decade, 10);
+        });
       }
 
       artworks = KaysData.sortArtworksByArtistLastName(artworks);
@@ -209,6 +284,13 @@
         renderGallery();
       });
     });
+
+    if (galleryArtistFilter) {
+      galleryArtistFilter.addEventListener('change', renderGallery);
+    }
+    if (galleryDecadeFilter) {
+      galleryDecadeFilter.addEventListener('change', renderGallery);
+    }
 
     renderGallery();
 
@@ -336,9 +418,9 @@
       var detailPriceHtml = '';
       if (!artwork.inPermanentCollection && artwork.price != null) {
         detailPriceHtml = '<p class="artwork-price">$' + artwork.price.toLocaleString('en-US') + '</p>';
+      } else if (artwork.inPermanentCollection) {
+        detailPriceHtml = '<p class="artwork-permanent">Permanent Collection &mdash; not for sale</p>';
       }
-
-      var detailArtistFirstName = artist ? artist.name.split(' ')[0] : '';
 
       artworkDetail.innerHTML =
         '<div class="detail-layout">' +
@@ -357,7 +439,7 @@
               '<p><strong>Dimensions:</strong> ' + artwork.dimensions + '</p>' +
               '<p><strong>Year:</strong> ' + artwork.year + '</p>' +
             '</div>' +
-            (artist ? '<a href="' + (window.PAGE_BASE || '') + 'artist.html?id=' + artist.id + '" class="btn btn-primary" style="margin-top:1.5rem;">View ' + detailArtistFirstName + '\'s profile</a>' : '') +
+            (artist ? '<a href="' + (window.PAGE_BASE || '') + 'artist.html?id=' + artist.id + '" class="btn btn-primary">View ' + artist.name + '\'s Profile</a>' : '') +
           '</div>' +
         '</div>' +
         (artist ?
@@ -435,34 +517,19 @@
   if (allArtistsGrid) {
     var artistsEmpty = document.getElementById('artistsEmpty');
     var artistResultsCount = document.getElementById('artistResultsCount');
-    var artistAlphaFilter = document.getElementById('artistAlphaFilter');
-    var artistMediaFilter = document.getElementById('artistMediaFilter');
-
-    function getAlphaRange(range) {
-      if (!range) return null;
-      var parts = range.split('-');
-      return { start: parts[0].trim(), end: parts[1].trim() };
-    }
-
-    function artistInRange(name, range) {
-      if (!range) return true;
-      var first = name.charAt(0).toUpperCase();
-      return first >= range.start && first <= range.end;
-    }
+    var artistMediaPillActive = 'all';
+    var artistMediaPills = document.querySelectorAll('[data-media]');
 
     function renderArtists() {
-      var range = artistAlphaFilter ? getAlphaRange(artistAlphaFilter.value) : null;
-      var mediaVal = artistMediaFilter ? artistMediaFilter.value : '';
+      var pillMedia = artistMediaPillActive !== 'all' ? artistMediaPillActive : '';
       var filtered = [];
 
       for (var k = 0; k < KaysData.artists.length; k++) {
         var ar = KaysData.artists[k];
-        if (!artistInRange(ar.name, range)) continue;
-        if (mediaVal && ar.media.toLowerCase().indexOf(mediaVal) === -1) continue;
+        if (pillMedia && ar.media.toLowerCase().indexOf(pillMedia) === -1) continue;
         filtered.push(ar);
       }
 
-      // Sort alphabetically
       filtered.sort(function (a, b) { return a.name.localeCompare(b.name); });
 
       allArtistsGrid.innerHTML = filtered.map(function (artist) {
@@ -479,12 +546,13 @@
       }
     }
 
-    if (artistAlphaFilter) {
-      artistAlphaFilter.addEventListener('change', renderArtists);
-    }
-    if (artistMediaFilter) {
-      artistMediaFilter.addEventListener('change', renderArtists);
-    }
+    artistMediaPills.forEach(function (pill) {
+      pill.addEventListener('click', function () {
+        artistMediaPillActive = this.dataset.media || 'all';
+        artistMediaPills.forEach(function (p) { p.classList.toggle('active', p === pill); });
+        renderArtists();
+      });
+    });
 
     renderArtists();
   }
@@ -552,6 +620,7 @@
             '<h1>' + a.name + '</h1>' +
             '<span class="artist-media">' + a.media + '</span>' +
             '<p class="profile-bio">' + a.bio + '</p>' +
+            '<a href="' + (window.PAGE_BASE || '') + 'gallery.html?artistId=' + a.id + '" class="btn btn-primary" style="margin-top:1rem;display:inline-block;">See ' + a.name + '\'s Artwork</a>' +
           '</div>' +
         '</div>' +
         '<section class="profile-works">' +
@@ -601,7 +670,7 @@
               '<h2 class="exhibition-card-title">' + ex.title + '</h2>' +
               '<p class="exhibition-card-dates">' + dateRange + '</p>' +
               '<p class="exhibition-card-desc">' + ex.description + '</p>' +
-              '<span class="exhibition-card-cta">View Exhibition &rarr;</span>' +
+              '<span class="exhibition-card-cta">View Exhibition</span>' +
             '</div>' +
           '</a>' +
         '</article>';
