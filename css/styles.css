@@ -30,7 +30,7 @@
   --font-heading: 'DM Serif Display', Georgia, serif;
   --font-body: 'Outfit', system-ui, sans-serif;
 
-  --nav-height: 64px;
+  --nav-height: 80px;
   --section-gap: 3rem;
   --color-bar-height: 3px;
 
@@ -127,12 +127,12 @@ ul {
 /* --- Buttons --- */
 .btn {
   display: inline-block;
-  padding: 0.9rem 2.4rem;
+  padding: 1.05rem 2.6rem;
   border-radius: 100px;
   font-family: var(--font-body);
-  font-weight: 500;
+  font-weight: 700;
   font-size: 0.92rem;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.04em;
   transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
               box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1),
               background 0.3s cubic-bezier(0.22, 1, 0.36, 1),
@@ -144,26 +144,28 @@ ul {
 }
 
 .btn-primary {
-  background: var(--charcoal);
+  background: var(--teal);
   color: var(--white);
 }
 
 .btn-primary:hover {
   background: var(--blue);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(26, 143, 196, 0.25);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(42, 157, 143, 0.35);
 }
 
 .btn-secondary {
   background: transparent;
-  color: var(--charcoal);
-  border: 1.5px solid var(--charcoal);
+  color: var(--teal);
+  border: 1.5px solid var(--teal);
 }
 
 .btn-secondary:hover {
-  background: var(--charcoal);
+  background: var(--teal);
   color: var(--white);
-  transform: translateY(-2px);
+  border-color: var(--teal);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(42, 157, 143, 0.25);
 }
 
 .btn-hero {
@@ -191,9 +193,9 @@ textarea:focus-visible {
 }
 
 .btn:focus-visible {
-  outline: 2px solid var(--blue);
+  outline: 2px solid var(--teal);
   outline-offset: 3px;
-  box-shadow: 0 0 0 4px rgba(26, 143, 196, 0.15);
+  box-shadow: 0 0 0 4px rgba(42, 157, 143, 0.2);
 }
 
 .nav-link:focus-visible,
@@ -243,7 +245,7 @@ textarea:focus-visible {
 }
 
 .nav-logo {
-  height: calc(var(--nav-height) - 12px);
+  height: calc(var(--nav-height) - 8px);
   width: auto;
 }
 
@@ -262,6 +264,7 @@ textarea:focus-visible {
   display: flex;
   align-items: center;
   gap: 0.15rem;
+  flex-wrap: nowrap;
 }
 
 .nav-link,
@@ -279,6 +282,10 @@ textarea:focus-visible {
   border-radius: 6px;
   transition: color 0.25s, background 0.25s;
   letter-spacing: 0.01em;
+  line-height: 1.2;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
 }
 
 .nav-link:hover,
@@ -301,22 +308,23 @@ textarea:focus-visible {
   height: 6px;
   border-right: 1.5px solid currentColor;
   border-bottom: 1.5px solid currentColor;
-  transform: rotate(45deg);
+  transform: translateY(-2px) rotate(45deg);
   margin-left: 0.45rem;
-  margin-bottom: 2px;
   opacity: 0.6;
   transition: transform 0.25s;
+  flex-shrink: 0;
 }
 
 .has-dropdown:hover .dropdown-toggle::after,
 .has-dropdown.open .dropdown-toggle::after {
-  transform: rotate(-135deg);
+  transform: translateY(1px) rotate(-135deg);
 }
 
 .dropdown {
   position: absolute;
-  top: calc(100% + 0.65rem);
+  top: 100%;
   left: 0;
+  margin-top: 0.65rem;
   min-width: 200px;
   background: var(--charcoal-light);
   border-radius: 10px;
@@ -327,6 +335,17 @@ textarea:focus-visible {
   transition: opacity 0.3s, transform 0.3s, visibility 0.3s;
   padding: 0.6rem 0;
   border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Invisible hover bridge — lets the cursor cross the visual gap between
+   the toggle and the panel without closing the dropdown. */
+.dropdown::before {
+  content: '';
+  position: absolute;
+  top: -0.85rem;
+  left: 0;
+  right: 0;
+  height: 0.85rem;
 }
 
 .has-dropdown:hover .dropdown,
@@ -594,7 +613,7 @@ textarea:focus-visible {
 
 .card-image {
   width: 100%;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 1 / 1;
   object-fit: cover;
   display: block;
   transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
@@ -630,22 +649,52 @@ textarea:focus-visible {
   display: block;
   font-family: var(--font-heading);
   font-size: 1.1rem;
-  font-weight: 400;
+  font-weight: 700;
   line-height: 1.3;
   margin-bottom: 0.3rem;
+  color: var(--white);
+  text-shadow: 0 1px 4px rgba(0,0,0,0.6);
 }
 
 .overlay-artist {
   display: block;
   font-size: 0.8rem;
-  font-weight: 300;
+  font-weight: 500;
   letter-spacing: 0.04em;
-  opacity: 0.85;
+  opacity: 0.92;
   margin-top: 0.25rem;
+  color: var(--white);
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5);
 }
 
 .card-info {
   padding: 1.4rem 1.3rem 1.6rem;
+  position: relative;
+}
+
+.card-info-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+  overflow: hidden;
+}
+
+.card-info-row .card-title {
+  flex: 1 1 0;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 0;
+}
+
+.card-info-row .card-artist {
+  flex-shrink: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 45%;
 }
 
 .media-tag {
@@ -684,7 +733,7 @@ textarea:focus-visible {
 
 .card-artist {
   font-size: 0.88rem;
-  color: var(--text-secondary);
+  color: var(--charcoal);
   font-weight: 400;
 }
 
@@ -825,14 +874,26 @@ textarea:focus-visible {
 }
 
 .artist-photo {
-  width: 100%;
+  width: 70%;
+  margin: 1.25rem auto 0;
   aspect-ratio: 1 / 1;
   object-fit: cover;
+  border-radius: 50%;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  border: 4px solid var(--gold);
+  display: block;
   transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .artist-card:hover .artist-photo {
   transform: scale(1.05);
+}
+
+.artist-photo-wrap img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
 }
 
 .artist-info {
@@ -841,8 +902,9 @@ textarea:focus-visible {
 
 .artist-info h3 {
   font-family: var(--font-heading);
-  font-size: 1.4rem;
+  font-size: 1.8rem;
   font-weight: 400;
+  line-height: 1.15;
   margin-bottom: 0.25rem;
 }
 
@@ -866,8 +928,8 @@ textarea:focus-visible {
 
 .artist-link {
   font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--charcoal);
+  font-weight: 700;
+  color: var(--teal);
   transition: color 0.25s;
   display: inline-block;
 }
@@ -1025,7 +1087,7 @@ body[data-page="artists"] .artist-link {
    ============================================= */
 .site-footer {
   background: var(--charcoal);
-  color: rgba(255, 255, 255, 0.65);
+  color: var(--white);
 }
 
 .footer-inner {
@@ -1047,15 +1109,16 @@ body[data-page="artists"] .artist-link {
   font-family: var(--font-heading);
   font-style: italic;
   font-size: 0.95rem;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--white);
+  font-weight: 700;
   margin-bottom: 0.4rem;
 }
 
 .footer-tagline {
   font-size: 0.85rem;
-  font-weight: 300;
+  font-weight: 700;
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.4);
+  color: var(--white);
   max-width: 280px;
 }
 
@@ -1077,7 +1140,8 @@ body[data-page="artists"] .artist-link {
 .footer-links a {
   display: inline-block;
   font-size: 0.88rem;
-  font-weight: 300;
+  font-weight: 700;
+  color: var(--white);
   transition: color 0.25s, transform 0.25s;
 }
 
@@ -1088,14 +1152,15 @@ body[data-page="artists"] .artist-link {
 
 .footer-contact p {
   font-size: 0.85rem;
-  font-weight: 300;
+  font-weight: 700;
+  color: var(--white);
   margin-bottom: 0.75rem;
   line-height: 1.5;
 }
 
 .footer-contact strong {
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.5);
+  font-weight: 700;
+  color: var(--white);
   font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -1105,6 +1170,7 @@ body[data-page="artists"] .artist-link {
 
 .footer-contact a {
   color: var(--teal);
+  font-weight: 700;
   text-decoration: none;
   transition: opacity 0.25s;
 }
@@ -1117,10 +1183,10 @@ body[data-page="artists"] .artist-link {
 .footer-bottom {
   text-align: center;
   padding: 1.5rem 2rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
   font-size: 0.78rem;
-  font-weight: 300;
-  color: rgba(255, 255, 255, 0.3);
+  font-weight: 700;
+  color: var(--white);
 }
 
 /* =============================================
@@ -1161,9 +1227,9 @@ body[data-page="artists"] .artist-link {
 }
 
 .home-welcome-text h1 {
-  font-family: var(--font-heading);
-  font-size: 2.75rem;
-  font-weight: 400;
+  font-family: var(--font-body);
+  font-size: 3.5rem;
+  font-weight: 800;
   line-height: 1.08;
   color: var(--charcoal);
   margin-bottom: 1.25rem;
@@ -1192,9 +1258,10 @@ body[data-page="artists"] .artist-link {
 }
 
 .home-quote cite {
-  font-size: 0.85rem;
+  font-size: 1.45rem;
   font-style: normal;
-  color: var(--text-secondary);
+  color: var(--charcoal);
+  font-weight: 600;
 }
 
 .home-quick-links {
@@ -1903,12 +1970,11 @@ body[data-page="artists"] .artist-link {
 
 .founder-quote cite {
   display: block;
-  font-size: 0.88rem;
+  font-size: 1.4rem;
   font-style: normal;
-  font-weight: 500;
-  color: var(--teal);
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--white);
+  letter-spacing: 0.02em;
 }
 
 .about-cta {
@@ -2037,8 +2103,33 @@ body[data-page="artists"] .artist-link {
    ============================================= */
 .contact-layout {
   display: grid;
-  grid-template-columns: 1fr 1.2fr;
+  grid-template-columns: 1fr 1fr;
   gap: 2rem;
+}
+
+.contact-form-card {
+  background: var(--light-gray);
+  padding: 2.5rem;
+  border-radius: 16px;
+  border: 1px solid var(--mid-gray);
+}
+
+.contact-address-block {
+  margin-bottom: 2rem;
+}
+
+.contact-address-block h2 {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  font-weight: 400;
+  margin-bottom: 1rem;
+  color: var(--charcoal);
+}
+
+.contact-address-block p {
+  font-size: 0.95rem;
+  line-height: 1.75;
+  color: var(--charcoal);
 }
 
 .form-group {
@@ -2097,7 +2188,7 @@ body[data-page="artists"] .artist-link {
 }
 
 .form-group textarea {
-  min-height: 120px;
+  min-height: 180px;
   resize: vertical;
 }
 
@@ -2125,7 +2216,8 @@ body[data-page="artists"] .artist-link {
    ============================================= */
 .exhibitions-grid {
   display: grid;
-  gap: 2rem;
+  grid-template-columns: 1fr;
+  gap: 3rem;
 }
 
 .exhibition-card {
@@ -2134,6 +2226,10 @@ body[data-page="artists"] .artist-link {
   overflow: hidden;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
   transition: transform 0.2s, box-shadow 0.2s;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+  align-items: center;
 }
 
 .exhibition-card:hover {
@@ -2142,19 +2238,26 @@ body[data-page="artists"] .artist-link {
 }
 
 .exhibition-card-link {
-  display: grid;
-  grid-template-columns: 280px 1fr;
+  display: contents;
   text-decoration: none;
   color: inherit;
 }
 
+@media (max-width: 1023px) {
+  .exhibition-card {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
+
 .exhibition-thumbs {
   overflow: hidden;
+  border-radius: 8px 0 0 8px;
 }
 
 .exhibition-thumb {
   width: 100%;
-  height: 100%;
+  aspect-ratio: 4 / 3;
   object-fit: cover;
   display: block;
 }
@@ -2415,8 +2518,47 @@ body[data-page="artists"] .artist-link {
 /* ===== CARD DIMENSIONS ===== */
 .card-dimensions {
   font-size: 0.75rem;
-  color: var(--mid-gray);
+  color: var(--charcoal-light);
   font-family: var(--font-body);
+  text-align: right;
+  margin-top: 0.15rem;
+}
+
+/* ===== CARD PRICE ===== */
+.card-price {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--charcoal);
+  text-align: right;
+  margin-top: 0.2rem;
+}
+
+/* ===== CATEGORY TAG PILL ===== */
+.card-category-tag {
+  position: absolute;
+  top: -1px;
+  left: 0;
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 0.2rem 0.65rem;
+  border-radius: 0 0 6px 0;
+  color: var(--white);
+  pointer-events: none;
+  z-index: 3;
+}
+
+.card-category-tag.cat-painting {
+  background: var(--teal);
+}
+
+.card-category-tag.cat-sculpture {
+  background: var(--coral);
+}
+
+.card-category-tag.cat-sketch {
+  background: var(--charcoal-light);
 }
 
 /* ===== SOCIAL ICONS ===== */
@@ -2460,6 +2602,36 @@ body[data-page="artists"] .artist-link {
 /* =============================================
    RESPONSIVE
    ============================================= */
+
+/* Narrow desktop — tighten nav so the Artwork dropdown doesn't crowd */
+@media (min-width: 1024px) and (max-width: 1200px) {
+  .nav-inner {
+    padding: 0 1.25rem;
+  }
+  .nav-slogan {
+    display: none;
+  }
+  .nav-brand {
+    gap: 0.6rem;
+  }
+  .nav-links {
+    gap: 0.05rem;
+  }
+  .nav-link,
+  .dropdown-toggle {
+    font-size: 0.78rem;
+    padding: 0.4rem 0.6rem;
+    letter-spacing: 0;
+  }
+  .dropdown-toggle::after {
+    margin-left: 0.3rem;
+    width: 5px;
+    height: 5px;
+  }
+  .dropdown {
+    min-width: 180px;
+  }
+}
 
 /* Tablet */
 @media (max-width: 1023px) {
@@ -2574,7 +2746,7 @@ body[data-page="artists"] .artist-link {
   /* Contact page */
   .contact-layout {
     grid-template-columns: 1fr;
-    gap: 2rem;
+    gap: 1.5rem;
   }
 
   /* Consignment page */
@@ -2687,6 +2859,7 @@ body[data-page="artists"] .artist-link {
   /* Hero */
   .hero-logo-img { max-width: 160px; }
   .home-hero h1 { font-size: 2rem; }
+  .home-welcome-text h1 { font-size: 2.2rem; }
   .hero-actions { flex-direction: column; gap: 0.75rem; }
 
   /* Detail page */

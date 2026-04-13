@@ -24,7 +24,7 @@
     <div class="nav-inner">
       <a href="../index.html" class="nav-brand">
         <img src="../images/KaysOrigLogo.png" alt="Kay's Originals" class="nav-logo">
-        <span class="nav-slogan">Get in Touch</span>
+        <span class="nav-slogan">Come and Visit</span>
       </a>
       <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
         <span></span><span></span><span></span>
@@ -51,74 +51,113 @@
   <!-- ===== PAGE HEADER ===== -->
   <section class="page-hero">
     <div class="section-inner">
-      <h1>Contact Us</h1>
+      <h1>Come and Visit</h1>
       <p class="hero-subtitle">Have a question or want to learn more? We'd love to hear from you.</p>
     </div>
   </section>
 
-  <!-- ===== CONTACT CONTENT ===== -->
+  <!-- ===== ADDRESS BLOCK ===== -->
+  <section class="page-content contact-address-section">
+    <div class="section-inner">
+      <div class="contact-address-block">
+        <div class="address-item">
+          <h4>Location</h4>
+          <p>1234 Gallery Lane, Suite 100<br>Austin, TX 78701</p>
+        </div>
+        <div class="address-item">
+          <h4>Phone</h4>
+          <p><a href="tel:+15550123456">(555) 012-3456</a></p>
+        </div>
+        <div class="address-item">
+          <h4>Email</h4>
+          <p><a href="mailto:info@kaysoriginals.com">info@kaysoriginals.com</a></p>
+        </div>
+        <div class="address-item">
+          <h4>Visiting Hours</h4>
+          <p>Tue–Sat: 11am – 6pm<br>
+             Sun: 12pm – 5pm<br>
+             Mon: Closed</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== CONTACT FORMS ===== -->
   <section class="page-content">
     <div class="section-inner">
+      <!-- TODO: These forms have no server handler — static site. Wire up a form service (e.g. Formspree) when back-end is added. -->
       <div class="contact-layout">
 
-        <div class="contact-info">
-          <h2>Gallery Information</h2>
-          <div class="info-block">
-            <h4>Email</h4>
-            <p><a href="mailto:info@kaysoriginals.com">info@kaysoriginals.com</a></p>
-          </div>
-          <div class="info-block">
-            <h4>Phone</h4>
-            <p><a href="tel:+15550123456">(555) 012-3456</a></p>
-          </div>
-          <div class="info-block">
-            <h4>Location</h4>
-            <p>Austin, TX</p>
-          </div>
-          <div class="info-block">
-            <h4>Gallery Hours</h4>
-            <p>Tuesday – Saturday: 10am – 6pm<br>
-               Sunday: 12pm – 5pm<br>
-               Monday: Closed</p>
-          </div>
-        </div>
-
-        <div class="contact-form">
-          <h2>Send a Message</h2>
-          <form id="contactForm">
+        <!-- Card A: For Customers -->
+        <div class="contact-form-card">
+          <h2>For Customers</h2>
+          <p class="card-subtitle">Questions about our artwork, artists, or visiting the gallery?</p>
+          <form id="contactFormCustomer">
+            <input type="hidden" name="audience" value="customer">
             <div class="form-group">
-              <label>I am a...</label>
-              <div class="radio-group">
-                <label class="radio-label"><input type="radio" name="visitor-type" value="customer" required> Customer or Art Enthusiast</label>
-                <label class="radio-label"><input type="radio" name="visitor-type" value="artist"> Artist Interested in Showing Work</label>
-              </div>
-              <p id="artistNote" class="artist-redirect-note" style="display:none; margin-top: 0.5rem; font-size: 0.88rem; color: var(--text-secondary);">
-                Looking to apply as an artist? <a href="artist-signup.html" style="color: var(--blue); font-weight: 500;">Download our application form</a> instead.
-              </p>
+              <label for="customerName">Name</label>
+              <input type="text" id="customerName" name="name" required placeholder="Your full name">
             </div>
             <div class="form-group">
-              <label for="contactName">Name</label>
-              <input type="text" id="contactName" name="name" required placeholder="Your full name">
+              <label for="customerEmail">Email</label>
+              <input type="email" id="customerEmail" name="email" required placeholder="your@email.com">
             </div>
             <div class="form-group">
-              <label for="contactEmail">Email</label>
-              <input type="email" id="contactEmail" name="email" required placeholder="your@email.com">
-            </div>
-            <div class="form-group">
-              <label for="contactSubject">Subject</label>
-              <select id="contactSubject" name="subject" required>
+              <label for="customerSubject">Subject</label>
+              <select id="customerSubject" name="subject" required>
                 <option value="">Select a subject...</option>
-                <option value="general">General Inquiry</option>
-                <option value="artwork">Artwork Question</option>
+                <option value="general">General question</option>
+                <option value="visiting">Visiting</option>
+                <option value="artwork-inquiry">Artwork inquiry</option>
+                <option value="other">Other</option>
               </select>
             </div>
             <div class="form-group">
-              <label for="contactMessage">Message</label>
-              <textarea id="contactMessage" name="message" rows="6" required placeholder="How can we help?"></textarea>
+              <label for="customerMessage">Message</label>
+              <textarea id="customerMessage" name="message" rows="6" required placeholder="How can we help?"></textarea>
             </div>
-            <button type="submit" class="btn btn-primary">Submit</button>
-            <div id="formSuccess" class="form-success" style="display:none;">
+            <button type="submit" class="btn btn-primary">Send Message</button>
+            <div class="form-success" style="display:none;">
               <p>Thank you! Your message has been sent. We'll be in touch soon.</p>
+            </div>
+          </form>
+        </div>
+
+        <!-- Card B: For Artists -->
+        <div class="contact-form-card">
+          <h2>For Artists — Consignment &amp; Sell Your Art</h2>
+          <p class="card-subtitle">Interested in showing or consigning your work at Kay's Originals?</p>
+          <form id="contactFormArtist">
+            <input type="hidden" name="audience" value="artist">
+            <div class="form-group">
+              <label for="artistName">Name</label>
+              <input type="text" id="artistName" name="name" required placeholder="Your full name">
+            </div>
+            <div class="form-group">
+              <label for="artistEmail">Email</label>
+              <input type="email" id="artistEmail" name="email" required placeholder="your@email.com">
+            </div>
+            <div class="form-group">
+              <label for="artistPortfolio">Portfolio Link <span class="field-optional">(optional)</span></label>
+              <input type="url" id="artistPortfolio" name="portfolio" placeholder="https://yourportfolio.com">
+            </div>
+            <div class="form-group">
+              <label for="artistMedia">Media</label>
+              <select id="artistMedia" name="media" required>
+                <option value="">Select your primary media...</option>
+                <option value="painting">Painting</option>
+                <option value="sculpture">Sculpture</option>
+                <option value="sketches">Sketches</option>
+                <option value="mixed-media">Mixed Media</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="artistMessage">Message</label>
+              <textarea id="artistMessage" name="message" rows="6" required placeholder="Tell us about your work and what you're looking for."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit Inquiry</button>
+            <div class="form-success" style="display:none;">
+              <p>Thank you! We'll review your inquiry and be in touch soon.</p>
             </div>
           </form>
         </div>

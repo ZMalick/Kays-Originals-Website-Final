@@ -53,6 +53,12 @@
     return src && src.startsWith('http') ? src : (window.IMAGE_BASE || '') + src;
   }
 
+  /* ---- Category display label (singular, capitalized) ---- */
+  function categoryLabel(cat) {
+    var map = { painting: 'Painting', sculpture: 'Sculpture', sketch: 'Sketch' };
+    return map[cat] || capitalize(cat);
+  }
+
   /* ---- Render an artwork card (reused everywhere) ---- */
   function renderArtworkCard(art, isRecent) {
     var artist = KaysData.getArtist(art.artistId);
@@ -60,22 +66,30 @@
     var badges = '';
     if (art.featured) badges += '<span class="badge-featured">Featured</span> ';
     if (isRecent) badges += '<span class="badge-new">Recently Added</span>';
+
+    var priceHtml = '';
+    if (!art.inPermanentCollection && art.price != null) {
+      priceHtml = '<span class="card-price">$' + art.price.toLocaleString('en-US') + '</span>';
+    }
+
     return '<article class="artwork-card" data-artwork-id="' + art.id + '">' +
       '<a href="' + base + 'artwork.html?id=' + art.id + '" class="card-link">' +
-        '<div class="card-frame">' +
-          '<img src="' + resolveImageSrc(art.image) + '" alt="' + art.title + '" class="card-image" loading="lazy">' +
+        '<div class="card-image">' +
+          '<img src="' + resolveImageSrc(art.image) + '" alt="' + art.title + '" loading="lazy">' +
+          '<span class="card-category-tag cat-' + art.category + '">' + categoryLabel(art.category) + '</span>' +
           '<div class="card-overlay"><div class="overlay-content">' +
             '<span class="overlay-title">' + art.title + '</span>' +
             '<span class="overlay-artist">' + (artist ? artist.name : '') + '</span>' +
           '</div></div>' +
         '</div>' +
         '<div class="card-info">' +
-          '<span class="media-tag tag-' + art.category + '">' + capitalize(art.category) + '</span>' +
-          (badges ? ' ' + badges : '') +
-          '<h3 class="card-title">' + art.title + '</h3>' +
-          '<p class="card-artist">' + (artist ? artist.name : '') + '</p>' +
-          '<p class="card-year">' + art.year + '</p>' +
-          (art.dimensions ? '<p class="card-dimensions">' + art.dimensions + '</p>' : '') +
+          (badges ? badges + ' ' : '') +
+          '<div class="card-info-row">' +
+            '<h3 class="card-title">' + art.title + '</h3>' +
+            '<span class="card-artist">' + (artist ? artist.name : '') + '</span>' +
+          '</div>' +
+          (art.dimensions ? '<div class="card-dimensions">(' + art.dimensions + ')</div>' : '') +
+          priceHtml +
         '</div>' +
       '</a>' +
     '</article>';
@@ -83,6 +97,7 @@
 
   /* ---- Render an artist card (reused everywhere) ---- */
   function renderArtistCard(artist) {
+    var firstName = artist.name.split(' ')[0];
     return '<div class="artist-card">' +
       '<a href="' + (window.PAGE_BASE || '') + 'artist.html?id=' + artist.id + '" class="artist-card-link" title="View more about ' + artist.name + '">' +
         '<div class="artist-photo-wrap">' +
@@ -92,7 +107,7 @@
           '<h3>' + artist.name + '</h3>' +
           '<span class="artist-media">' + artist.media + '</span>' +
           '<p>' + artist.shortBio + '</p>' +
-          '<span class="artist-link">View Portfolio &rarr;</span>' +
+          '<span class="artist-link">View ' + firstName + '\'s profile &rarr;</span>' +
         '</div>' +
       '</a>' +
     '</div>';
@@ -169,6 +184,8 @@
       if (currentCategory) {
         artworks = artworks.filter(function (a) { return a.category === currentCategory; });
       }
+
+      artworks = KaysData.sortArtworksByArtistLastName(artworks);
 
       galleryGrid.innerHTML = artworks.map(function (art) {
         return renderArtworkCard(art, false);
@@ -316,6 +333,13 @@
         exhibitionLinks += '</ul></div>';
       }
 
+      var detailPriceHtml = '';
+      if (!artwork.inPermanentCollection && artwork.price != null) {
+        detailPriceHtml = '<p class="artwork-price">$' + artwork.price.toLocaleString('en-US') + '</p>';
+      }
+
+      var detailArtistFirstName = artist ? artist.name.split(' ')[0] : '';
+
       artworkDetail.innerHTML =
         '<div class="detail-layout">' +
           '<div class="detail-image-wrap">' +
@@ -326,13 +350,14 @@
             '<span class="media-tag tag-' + artwork.category + '">' + capitalize(artwork.category) + '</span>' +
             '<h1 class="detail-title">' + artwork.title + '</h1>' +
             '<p class="detail-artist-year">' + (artist ? artist.name : '') + ' &middot; ' + artwork.year + '</p>' +
+            detailPriceHtml +
             '<p class="detail-description">' + artwork.description + '</p>' +
             '<div class="detail-specs">' +
               '<p><strong>Medium:</strong> ' + artwork.medium + '</p>' +
               '<p><strong>Dimensions:</strong> ' + artwork.dimensions + '</p>' +
               '<p><strong>Year:</strong> ' + artwork.year + '</p>' +
             '</div>' +
-            (artist ? '<a href="' + (window.PAGE_BASE || '') + 'artist.html?id=' + artist.id + '" class="btn btn-primary" style="margin-top:1.5rem;">View Artist Profile</a>' : '') +
+            (artist ? '<a href="' + (window.PAGE_BASE || '') + 'artist.html?id=' + artist.id + '" class="btn btn-primary" style="margin-top:1.5rem;">View ' + detailArtistFirstName + '\'s profile</a>' : '') +
           '</div>' +
         '</div>' +
         (artist ?
@@ -730,6 +755,7 @@
     backdrop.addEventListener('click', closeMenu);
 
     navLinks.querySelectorAll('.nav-link').forEach(function (link) {
+      if (link.classList.contains('dropdown-toggle')) return; // don't close the panel when opening the Artwork sub-menu
       link.addEventListener('click', closeMenu);
     });
   }

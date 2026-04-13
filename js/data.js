@@ -442,7 +442,51 @@ var KaysData = (function () {
     }
   ];
 
+  /* ---- Iteration 2: Pricing + Permanent Collection ----
+     Historical masterpieces belong to the permanent collection and are not for sale.
+     Contemporary consigned pieces carry a display-only inquiry price. */
+  var PERMANENT_IDS = [
+    'starry-night', 'water-lilies', 'the-thinker', 'self-portrait-thorn',
+    'vitruvian-man', 'les-demoiselles', 'guernica', 'impression-sunrise',
+    'the-kiss-rodin', 'anatomy-studies', 'the-two-fridas', 'sunflowers'
+  ];
+  var PRICES = {
+    'desert-bloom': 4200,
+    'amber-horizon': 3800,
+    'reclaimed-tower': 2900,
+    'vessel-of-memory': 2400,
+    'bridge-and-fog': 1800,
+    'stairwell-light': 1600,
+    'portrait-in-gold': 3200,
+    'gesture-study-iv': 950,
+    'evening-figure': 3500
+  };
+  (function applyPricingFlags() {
+    for (var i = 0; i < artworks.length; i++) {
+      var aw = artworks[i];
+      aw.inPermanentCollection = PERMANENT_IDS.indexOf(aw.id) !== -1;
+      aw.price = PRICES[aw.id] != null ? PRICES[aw.id] : null;
+    }
+  })();
+
   /* ---- Helper Functions ---- */
+
+  function getLastName(fullName) {
+    var parts = (fullName || '').trim().split(/\s+/);
+    return parts[parts.length - 1] || '';
+  }
+
+  function sortArtworksByArtistLastName(list) {
+    var copy = list.slice();
+    copy.sort(function (a, b) {
+      var la = getLastName((getArtist(a.artistId) || {}).name);
+      var lb = getLastName((getArtist(b.artistId) || {}).name);
+      var cmp = la.localeCompare(lb);
+      if (cmp !== 0) return cmp;
+      return a.title.localeCompare(b.title);
+    });
+    return copy;
+  }
 
   function getArtist(id) {
     for (var i = 0; i < artists.length; i++) {
@@ -573,6 +617,7 @@ var KaysData = (function () {
     getArtwork: getArtwork,
     getArtworksByArtist: getArtworksByArtist,
     getArtworksByCategory: getArtworksByCategory,
+    sortArtworksByArtistLastName: sortArtworksByArtistLastName,
     searchArtworks: searchArtworks,
     getArtistList: getArtistList,
     getFeaturedArtwork: getFeaturedArtwork,
