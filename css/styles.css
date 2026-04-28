@@ -253,7 +253,7 @@ textarea:focus-visible {
   font-family: var(--font-heading);
   font-style: italic;
   font-size: 0.82rem;
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--white);
   letter-spacing: 0.04em;
   border-left: 1px solid rgba(255, 255, 255, 0.15);
   padding-left: 0.85rem;
@@ -274,7 +274,7 @@ textarea:focus-visible {
   background: transparent;
   border: none;
   cursor: pointer;
-  color: rgba(255, 255, 255, 0.75);
+  color: var(--white);
   font-size: 0.82rem;
   font-weight: 400;
   font-family: var(--font-body);
@@ -2848,6 +2848,14 @@ body[data-page="contact"] .page-hero .hero-subtitle {
 /* ===== FORM FEEDBACK ===== */
 .form-success {
   background: var(--teal);
+  color: var(--white);
+  padding: 1rem 1.25rem;
+  border-radius: 6px;
+  font-family: var(--font-body);
+  margin-top: 1rem;
+}
+.form-error {
+  background: var(--coral);
   color: var(--white);
   padding: 1rem 1.25rem;
   border-radius: 6px;

@@ -31,7 +31,7 @@
       </button>
       <ul class="nav-links" id="navLinks">
         <li class="has-dropdown">
-          <button class="dropdown-toggle nav-link" aria-haspopup="true" aria-expanded="false">Artwork</button>
+          <a href="gallery.html" class="dropdown-toggle nav-link" aria-haspopup="true" aria-expanded="false">Artwork</a>
           <ul class="dropdown" role="menu">
             <li><a href="gallery.html?category=painting" class="nav-link">Paintings</a></li>
             <li><a href="gallery.html?category=sculpture" class="nav-link">Sculptures</a></li>
@@ -60,7 +60,8 @@
   <section class="page-content">
     <div class="section-inner">
       <div class="gallery-filters" id="galleryFilters">
-        <button class="filter-pill active" data-category="painting">Paintings</button>
+        <button class="filter-pill active" data-category="">All</button>
+        <button class="filter-pill" data-category="painting">Paintings</button>
         <button class="filter-pill" data-category="sculpture">Sculptures</button>
         <button class="filter-pill" data-category="sketch">Sketches</button>
         <select id="galleryArtistFilter" class="filter-select"><option value="">All Artists</option></select>

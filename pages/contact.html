@@ -31,7 +31,7 @@
       </button>
       <ul class="nav-links" id="navLinks">
         <li class="has-dropdown">
-          <button class="dropdown-toggle nav-link" aria-haspopup="true" aria-expanded="false">Artwork</button>
+          <a href="gallery.html" class="dropdown-toggle nav-link" aria-haspopup="true" aria-expanded="false">Artwork</a>
           <ul class="dropdown" role="menu">
             <li><a href="gallery.html?category=painting" class="nav-link">Paintings</a></li>
             <li><a href="gallery.html?category=sculpture" class="nav-link">Sculptures</a></li>
@@ -94,6 +94,9 @@
             <div class="form-success" style="display:none;">
               <p>Thank you! Your message has been sent. We'll be in touch soon.</p>
             </div>
+            <div class="form-error" style="display:none;">
+              <p>Sorry — something went wrong sending your message. Please try again or email us directly.</p>
+            </div>
           </form>
         </div>
 
@@ -132,6 +135,9 @@
             <button type="submit" class="btn btn-primary">Submit Inquiry</button>
             <div class="form-success" style="display:none;">
               <p>Thank you! We'll review your inquiry and be in touch soon.</p>
+            </div>
+            <div class="form-error" style="display:none;">
+              <p>Sorry — something went wrong sending your inquiry. Please try again or email us directly.</p>
             </div>
           </form>
         </div>
@@ -187,6 +193,10 @@
   </footer>
 
   <script>window.PAGE_BASE = '';</script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script>
+    emailjs.init({ publicKey: 'Qb8SA6Hjmj0s-rPZK' });
+  </script>
   <script src="../js/data.js"></script>
   <script src="../js/main.js"></script>
 </body>

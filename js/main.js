@@ -213,10 +213,10 @@
       }
     }
 
-    // Read category from URL param (from nav dropdown)
+    // Read category from URL param (from nav dropdown). No param = show All.
     var rawCat = getParam('category') || '';
-    var showAll = rawCat === 'all';
-    var currentCategory = showAll ? '' : (rawCat || 'painting');
+    var showAll = !rawCat || rawCat === 'all';
+    var currentCategory = showAll ? '' : rawCat;
 
     // Read artistId URL param — preselect artist filter if present
     var rawArtistId = getParam('artistId') || '';
@@ -224,15 +224,10 @@
       galleryArtistFilter.value = rawArtistId;
     }
 
-    // If URL has a specific category, set the matching pill active; otherwise default to first pill
+    // Set the matching pill active (All pill has empty data-category)
     pills.forEach(function (p) {
-      p.classList.toggle('active', !showAll && p.dataset.category === currentCategory);
+      p.classList.toggle('active', (p.dataset.category || '') === currentCategory);
     });
-    if (!rawCat) {
-      // No URL param: default to paintings, first pill stays active
-      var firstPill = pills[0];
-      if (firstPill) firstPill.classList.add('active');
-    }
 
     // If artistId param, clear category filter to show all of that artist's work
     if (rawArtistId) {
@@ -770,27 +765,81 @@
   });
 
   /* ========================================
-     PAGE: Contact Form
+     PAGE: Contact Form (EmailJS)
      ======================================== */
-  var contactForm = document.getElementById('contactForm');
-  if (contactForm) {
-    var formSuccess = document.getElementById('formSuccess');
-    var artistNote = document.getElementById('artistNote');
-    var visitorRadios = contactForm.querySelectorAll('input[name="visitor-type"]');
-    visitorRadios.forEach(function (radio) {
-      radio.addEventListener('change', function () {
-        if (artistNote) {
-          artistNote.style.display = this.value === 'artist' ? 'block' : 'none';
-        }
-      });
-    });
+  // EmailJS credentials — public key lives in pages/contact.html (safe to expose, rate-limited per template)
+  var EMAILJS_SERVICE_ID = 'service_9rwsrlf';
+  var EMAILJS_CUSTOMER_TEMPLATE_ID = 'template_wxlyeed';
+  var EMAILJS_ARTIST_TEMPLATE_ID = 'template_f02f8jb';
 
-    contactForm.addEventListener('submit', function (e) {
+  function wireContactForm(formId, templateId, buildPayload) {
+    var form = document.getElementById(formId);
+    if (!form) return;
+
+    var successEl = form.querySelector('.form-success');
+    var errorEl = form.querySelector('.form-error');
+    var submitBtn = form.querySelector('button[type="submit"]');
+    var originalBtnText = submitBtn ? submitBtn.textContent : '';
+
+    form.addEventListener('submit', function (e) {
       e.preventDefault();
-      contactForm.reset();
-      if (formSuccess) formSuccess.style.display = 'block';
+      if (typeof emailjs === 'undefined') {
+        if (errorEl) errorEl.style.display = 'block';
+        return;
+      }
+
+      if (successEl) successEl.style.display = 'none';
+      if (errorEl) errorEl.style.display = 'none';
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Sending...';
+      }
+
+      emailjs.send(EMAILJS_SERVICE_ID, templateId, buildPayload(form))
+        .then(function () {
+          form.reset();
+          if (successEl) successEl.style.display = 'block';
+        })
+        .catch(function (err) {
+          if (window.console) console.error('EmailJS send failed:', err);
+          if (errorEl) errorEl.style.display = 'block';
+        })
+        .then(function () {
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = originalBtnText;
+          }
+        });
     });
   }
+
+  wireContactForm('contactFormCustomer', EMAILJS_CUSTOMER_TEMPLATE_ID, function (form) {
+    var subject = form.querySelector('#customerSubject');
+    var subjectText = subject && subject.options[subject.selectedIndex] ? subject.options[subject.selectedIndex].text : '';
+    return {
+      from_name: form.querySelector('#customerName').value,
+      from_email: form.querySelector('#customerEmail').value,
+      subject_line: subjectText,
+      extra_field_label: 'Subject',
+      extra_field_value: subjectText,
+      message: form.querySelector('#customerMessage').value
+    };
+  });
+
+  wireContactForm('contactFormArtist', EMAILJS_ARTIST_TEMPLATE_ID, function (form) {
+    var media = form.querySelector('#artistMedia');
+    var mediaText = media && media.options[media.selectedIndex] ? media.options[media.selectedIndex].text : '';
+    var portfolio = form.querySelector('#artistPortfolio').value;
+    var extraValue = mediaText + (portfolio ? ' — Portfolio: ' + portfolio : '');
+    return {
+      from_name: form.querySelector('#artistName').value,
+      from_email: form.querySelector('#artistEmail').value,
+      subject_line: 'New artist inquiry',
+      extra_field_label: 'Media / Portfolio',
+      extra_field_value: extraValue,
+      message: form.querySelector('#artistMessage').value
+    };
+  });
 
   /* ========================================
      SHARED: Mobile Navigation
@@ -834,6 +883,8 @@
     var toggle = item.querySelector('.dropdown-toggle');
     if (!toggle) return;
     toggle.addEventListener('click', function (e) {
+      // Desktop: let the link navigate to gallery.html. Mobile/tablet: toggle the dropdown.
+      if (window.innerWidth > 1023) return;
       e.preventDefault();
       e.stopPropagation();
       var isOpen = item.classList.contains('open');
