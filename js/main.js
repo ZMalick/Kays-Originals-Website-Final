@@ -226,7 +226,7 @@
       for (var di = 0; di < decades.length; di++) {
         var dOpt = document.createElement('option');
         dOpt.value = decades[di];
-        dOpt.textContent = decades[di] + 's';
+        dOpt.textContent = decades[di];
         galleryDecadeFilter.appendChild(dOpt);
       }
     }
@@ -268,8 +268,7 @@
 
       if (filterDecade) {
         artworks = artworks.filter(function (a) {
-          var decade = filterDecade;
-          return a.year && Math.floor(a.year / 10) * 10 === parseInt(decade, 10);
+          return a.decade === filterDecade;
         });
       }
 
@@ -303,6 +302,18 @@
     }
     if (galleryDecadeFilter) {
       galleryDecadeFilter.addEventListener('change', renderGallery);
+    }
+
+    var clearFiltersLink = document.getElementById('clearFilters');
+    if (clearFiltersLink) {
+      clearFiltersLink.addEventListener('click', function (e) {
+        e.preventDefault();
+        currentCategory = '';
+        pills.forEach(function (p) { p.classList.toggle('active', (p.dataset.category || '') === ''); });
+        if (galleryArtistFilter) { galleryArtistFilter.value = ''; }
+        if (galleryDecadeFilter) { galleryDecadeFilter.value = ''; }
+        renderGallery();
+      });
     }
 
     renderGallery();
