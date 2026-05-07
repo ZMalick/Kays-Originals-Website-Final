@@ -36,15 +36,20 @@
     // Check top-level nav links only (skip dropdown children so they don't all highlight on gallery.html)
     document.querySelectorAll('.nav-links > li > .nav-link').forEach(function (link) {
       link.classList.remove('active');
+      link.removeAttribute('aria-current');
       var href = link.getAttribute('href');
       if (href && href.indexOf(target) !== -1) {
         link.classList.add('active');
+        link.setAttribute('aria-current', 'page');
       }
     });
     // Check dropdown toggle for gallery/artwork pages
     if (target === 'gallery.html') {
       var toggle = document.querySelector('.dropdown-toggle');
-      if (toggle) toggle.classList.add('active');
+      if (toggle) {
+        toggle.classList.add('active');
+        toggle.setAttribute('aria-current', 'page');
+      }
 
       // Highlight the matching dropdown child (Paintings / Sculptures / Sketches / All)
       var dropdownLinks = document.querySelectorAll('.dropdown .nav-link');
@@ -121,13 +126,26 @@
     '</article>';
   }
 
+  /* ---- Render an artist's avatar: photo if present, otherwise a monogram fallback. ---- */
+  function renderArtistAvatar(artist, photoClass) {
+    if (artist.photo) {
+      return '<img src="' + artist.photo + '" alt="' + artist.name + '" class="' + photoClass + '" loading="lazy">';
+    }
+    var parts = artist.name.split(' ');
+    var first = (parts[0][0] || '').toUpperCase();
+    var last = (parts[parts.length - 1][0] || '').toUpperCase();
+    return '<div class="' + photoClass + ' artist-monogram" data-monogram-id="' + artist.id + '" aria-label="' + artist.name + '">' +
+      '<span class="mono-1">' + first + '</span><span class="mono-2">' + last + '</span>' +
+    '</div>';
+  }
+
   /* ---- Render an artist card (reused everywhere) ---- */
   function renderArtistCard(artist) {
     var firstName = artist.name.split(' ')[0];
     return '<div class="artist-card">' +
       '<a href="' + (window.PAGE_BASE || '') + 'artist.html?id=' + artist.id + '" class="artist-card-link" title="View more about ' + artist.name + '">' +
         '<div class="artist-photo-wrap">' +
-          '<img src="' + artist.photo + '" alt="' + artist.name + '" class="artist-photo" loading="lazy">' +
+          renderArtistAvatar(artist, 'artist-photo') +
         '</div>' +
         '<div class="artist-info">' +
           '<h3>' + artist.name + '</h3>' +
@@ -151,17 +169,17 @@
     if (feat) {
       var featArtist = KaysData.getArtist(feat.artistId);
       var base = window.PAGE_BASE || '';
+      var featUrl = base + 'artwork.html?id=' + feat.id;
       homeFeatured.innerHTML =
         '<div class="home-featured-card">' +
           '<span class="badge-featured">Featured</span>' +
-          '<a href="' + base + 'artwork.html?id=' + feat.id + '" class="home-featured-link">' +
+          '<a href="' + featUrl + '" class="home-featured-link">' +
             '<img src="' + resolveImageSrc(feat.imageLg || feat.image) + '" alt="' + feat.title + '" class="home-featured-img">' +
           '</a>' +
           '<div class="home-featured-info">' +
-            '<h2 class="home-featured-title">' + feat.title + '</h2>' +
+            '<h2 class="home-featured-title"><a href="' + featUrl + '">' + feat.title + '</a></h2>' +
             '<p class="home-featured-artist">' + (featArtist ? featArtist.name : '') + ' &middot; ' + feat.year + '</p>' +
             '<p class="home-featured-desc">' + feat.description + '</p>' +
-            '<a href="' + base + 'artwork.html?id=' + feat.id + '" class="btn btn-primary">View This Piece</a>' +
           '</div>' +
         '</div>';
     }
@@ -442,6 +460,15 @@
             '<h3>About the Artist</h3>' +
             '<p>' + artist.shortBio + ' <a href="' + (window.PAGE_BASE || '') + 'artist.html?id=' + artist.id + '">View full profile &rarr;</a></p>' +
           '</div>' : '') +
+        '<div class="detail-visit">' +
+          '<h3>See This Piece in Person</h3>' +
+          '<p class="detail-visit-lede">' + (artwork.inPermanentCollection ? 'On display at the gallery as part of the Permanent Collection.' : 'Currently on view at the gallery.') + '</p>' +
+          '<dl class="detail-visit-meta">' +
+            '<dt>Hours</dt><dd>Tue&ndash;Sat 11am&ndash;6pm &middot; Sun 12pm&ndash;5pm</dd>' +
+            '<dt>Address</dt><dd><a href="https://maps.google.com/?q=1234+Gallery+Lane+Suite+100+Austin+TX+78701" target="_blank" rel="noopener">1234 Gallery Lane, Suite 100 &middot; Austin, TX 78701</a></dd>' +
+          '</dl>' +
+          '<a href="' + (window.PAGE_BASE || '') + 'contact.html" class="btn btn-secondary">Plan a Visit</a>' +
+        '</div>' +
         exhibitionLinks;
 
       // Update breadcrumb title
@@ -576,19 +603,20 @@
       var aOgImage = document.querySelector('meta[property="og:image"]');
       if (aOgTitle) aOgTitle.setAttribute('content', a.name + ' \u2014 Kay\'s Originals');
       if (aOgDesc) aOgDesc.setAttribute('content', a.shortBio);
-      if (aOgImage) aOgImage.setAttribute('content', a.photo);
+      if (aOgImage && a.photo) aOgImage.setAttribute('content', a.photo);
 
       // JSON-LD structured data
       var aJsonLd = document.createElement('script');
       aJsonLd.type = 'application/ld+json';
-      aJsonLd.textContent = JSON.stringify({
+      var jsonLdData = {
         '@context': 'https://schema.org',
         '@type': 'Person',
         name: a.name,
         description: a.bio,
-        image: a.photo,
         jobTitle: 'Artist'
-      });
+      };
+      if (a.photo) jsonLdData.image = a.photo;
+      aJsonLd.textContent = JSON.stringify(jsonLdData);
       document.head.appendChild(aJsonLd);
 
       var works = KaysData.getArtworksByArtist(a.id);
@@ -610,7 +638,7 @@
 
       artistDetail.innerHTML =
         '<div class="profile-header artist-hero-banner">' +
-          '<img src="' + a.photo + '" alt="' + a.name + '" class="profile-photo">' +
+          renderArtistAvatar(a, 'profile-photo') +
           '<div class="profile-info">' +
             '<h1>' + a.name + '</h1>' +
             '<span class="artist-media">' + a.media + '</span>' +

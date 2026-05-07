@@ -91,10 +91,10 @@
               <textarea id="customerMessage" name="message" rows="4" required placeholder="How can we help?"></textarea>
             </div>
             <button type="submit" class="btn btn-primary">Send Message</button>
-            <div class="form-success" style="display:none;">
+            <div class="form-success" role="status" aria-live="polite" style="display:none;">
               <p>Thank you! Your message has been sent. We'll be in touch soon.</p>
             </div>
-            <div class="form-error" style="display:none;">
+            <div class="form-error" role="alert" aria-live="assertive" style="display:none;">
               <p>Sorry — something went wrong sending your message. Please try again or email us directly.</p>
             </div>
           </form>
@@ -133,10 +133,10 @@
               <textarea id="artistMessage" name="message" rows="4" required placeholder="Tell us about your work and what you're looking for."></textarea>
             </div>
             <button type="submit" class="btn btn-primary">Submit Inquiry</button>
-            <div class="form-success" style="display:none;">
+            <div class="form-success" role="status" aria-live="polite" style="display:none;">
               <p>Thank you! We'll review your inquiry and be in touch soon.</p>
             </div>
-            <div class="form-error" style="display:none;">
+            <div class="form-error" role="alert" aria-live="assertive" style="display:none;">
               <p>Sorry — something went wrong sending your inquiry. Please try again or email us directly.</p>
             </div>
           </form>
@@ -179,6 +179,24 @@
         <img src="../images/KaysOrigLogo.png" alt="Kay's Originals" class="footer-logo">
         <p class="footer-slogan">Discover Original Art</p>
         <p class="footer-tagline">A curated gallery celebrating bold, original artwork from visionary artists.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="gallery.html?category=painting">Paintings</a></li>
+          <li><a href="gallery.html?category=sculpture">Sculptures</a></li>
+          <li><a href="gallery.html?category=sketch">Sketches</a></li>
+          <li><a href="gallery.html">All Artwork</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="consignment.html">For Artists</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+        </ul>
       </div>
       <div class="footer-contact">
         <h4>Get in Touch</h4>
