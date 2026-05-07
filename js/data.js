@@ -1,11 +1,31 @@
 /* =============================================
    Kay's Originals — Shared Data Layer
+   ---------------------------------------------
+   This file is the single source of truth for everything the website
+   displays: the list of artists, the list of artwork, and the list of
+   exhibitions. Every page (gallery, artist profile, exhibition detail,
+   homepage, etc.) reads from here so we never have to update the same
+   information in two places.
+
+   It is wrapped in an "IIFE" (Immediately-Invoked Function Expression).
+   That just means the code runs once when the file loads, and only the
+   things we choose to expose at the bottom (the "Public API") become
+   reachable from other files via the `KaysData` global.
    ============================================= */
 
 var KaysData = (function () {
-  'use strict';
+  'use strict';  // Catches common mistakes (e.g. typos in variable names) at runtime.
 
-  /* ---- Artists ---- */
+  /* ---- Artists ----
+     Every artwork must belong to one of these artists (matched by `id`).
+     - id:        short slug used in URLs like ?id=monet — keep lowercase, no spaces
+     - name:      full display name shown on the site
+     - media:     what they work in (Painting, Sculpture, Sketching, or combos)
+     - photo:     path to portrait image, or null to use the monogram fallback (initials)
+     - bio:       long biography shown on the artist's profile page
+     - shortBio:  one-sentence teaser shown on listing cards
+     Note: characters like – (en dash) and × (×) are written as escapes
+     so the file stays plain ASCII and renders the same on every computer. */
   var artists = [
     {
       id: 'picasso',
@@ -89,7 +109,22 @@ var KaysData = (function () {
     }
   ];
 
-  /* ---- Artworks ---- */
+  /* ---- Artworks ----
+     The main catalog. Every entry below renders as a card in the gallery
+     and as a detail page at pages/artwork.html?id=<that artwork's id>.
+     - id:          slug used in the URL — must be unique
+     - title:       display title
+     - artistId:    must match an `id` from the artists array above
+     - category:    one of 'painting' | 'sculpture' | 'sketch' (drives filters and tags)
+     - year:        year the piece was made (string so we can show "c. 1490")
+     - decade:      grouping label for the decade filter on the gallery page
+     - medium:      e.g. "Oil on canvas" — singular word "medium", never "mediums"
+     - dimensions:  shown on cards and the detail page
+     - image:       small/normal version used on cards
+     - imageLg:     large version used on detail pages and the lightbox zoom
+     - description: paragraph shown on the detail page
+     - sold:        kept for future use; unused today
+     - featured:    if true, the piece is highlighted on the homepage */
   var artworks = [
     {
       id: 'starry-night',
@@ -408,7 +443,19 @@ var KaysData = (function () {
     }
   ];
 
-  /* ---- Exhibitions ---- */
+  /* ---- Exhibitions ----
+     Curated shows the gallery is hosting. Each exhibition pulls together
+     a set of existing artwork and artist IDs (from the arrays above) so
+     we don't duplicate any data — we just point to it.
+     - id:          slug used in the URL (?id=spring-showcase-2026)
+     - title:       display title for the show
+     - startDate /
+       endDate:     ISO format YYYY-MM-DD; formatExhibitionDate() in main.js
+                    turns these into "Monday, April 6th" style labels
+     - description: paragraph shown on the exhibition detail page
+     - artworkIds:  IDs of artwork featured in the show
+     - artistIds:   IDs of artists featured in the show
+     - disclaimer:  fine print shown under the description */
   var exhibitions = [
     {
       id: 'spring-showcase-2026',
@@ -442,14 +489,26 @@ var KaysData = (function () {
     }
   ];
 
-  /* ---- Iteration 2: Pricing + Permanent Collection ----
-     Historical masterpieces belong to the permanent collection and are not for sale.
-     Contemporary consigned pieces carry a display-only inquiry price. */
+  /* ---- Pricing + Permanent Collection ----
+     Two-tier rule for the gallery:
+       1. Historical masterpieces (Van Gogh, Monet, etc.) live in the
+          "Permanent Collection" and are NEVER for sale — we show a
+          "Permanent Collection" label on their cards instead of a price.
+       2. Contemporary consigned pieces (the local artists) show an
+          informational price. There is no cart and no checkout —
+          prices are display-only so visitors know what to inquire about.
+     The IIFE below stamps each artwork with two derived flags
+     (inPermanentCollection, price) so the rest of the code can just
+     read those flags instead of cross-referencing these lists. */
+
+  // Hard-coded list of artwork IDs that belong to the Permanent Collection.
   var PERMANENT_IDS = [
     'starry-night', 'water-lilies', 'the-thinker', 'self-portrait-thorn',
     'vitruvian-man', 'les-demoiselles', 'guernica', 'impression-sunrise',
     'the-kiss-rodin', 'anatomy-studies', 'the-two-fridas', 'sunflowers'
   ];
+
+  // Display prices (USD) for contemporary consigned pieces only.
   var PRICES = {
     'desert-bloom': 4200,
     'amber-horizon': 3800,
@@ -461,6 +520,10 @@ var KaysData = (function () {
     'gesture-study-iv': 950,
     'evening-figure': 3500
   };
+
+  // Walk the artworks array once and copy the lookup results onto each item.
+  // After this runs, every artwork has `.inPermanentCollection` (true/false)
+  // and `.price` (a number or null) — no other code needs the lists above.
   (function applyPricingFlags() {
     for (var i = 0; i < artworks.length; i++) {
       var aw = artworks[i];
@@ -469,13 +532,19 @@ var KaysData = (function () {
     }
   })();
 
-  /* ---- Helper Functions ---- */
+  /* ---- Helper Functions ----
+     Small lookup and filter functions used by main.js to render pages.
+     All of them take simple inputs (an id, a category) and return data
+     pulled from the arrays defined above. None of them mutate the data. */
 
+  // Return just the last word of a name — used for alphabetizing by surname.
   function getLastName(fullName) {
     var parts = (fullName || '').trim().split(/\s+/);
     return parts[parts.length - 1] || '';
   }
 
+  // Sort a list of artworks by the artist's last name, then by title as a tiebreaker.
+  // We copy the list first (`slice()`) so we don't mutate the caller's array.
   function sortArtworksByArtistLastName(list) {
     var copy = list.slice();
     copy.sort(function (a, b) {
@@ -488,6 +557,7 @@ var KaysData = (function () {
     return copy;
   }
 
+  // Find an artist by their id. Returns the artist object or null if not found.
   function getArtist(id) {
     for (var i = 0; i < artists.length; i++) {
       if (artists[i].id === id) {
@@ -497,6 +567,7 @@ var KaysData = (function () {
     return null;
   }
 
+  // Find an artwork by its id. Returns the artwork object or null if not found.
   function getArtwork(id) {
     for (var i = 0; i < artworks.length; i++) {
       if (artworks[i].id === id) {
@@ -506,6 +577,8 @@ var KaysData = (function () {
     return null;
   }
 
+  // Return every artwork that belongs to a given artist.
+  // Used on the artist profile page ("Works in Gallery" section).
   function getArtworksByArtist(artistId) {
     var results = [];
     for (var i = 0; i < artworks.length; i++) {
@@ -516,6 +589,8 @@ var KaysData = (function () {
     return results;
   }
 
+  // Return artwork in a given category ('painting', 'sculpture', 'sketch').
+  // Passing 'all' returns a copy of the full list.
   function getArtworksByCategory(category) {
     if (category === 'all') {
       return artworks.slice();
@@ -529,6 +604,8 @@ var KaysData = (function () {
     return results;
   }
 
+  // Case-insensitive search across title, artist name, and category.
+  // (Reserved for future search UI — not currently wired up to any page.)
   function searchArtworks(query) {
     var q = query.toLowerCase();
     var results = [];
@@ -547,12 +624,16 @@ var KaysData = (function () {
     return results;
   }
 
+  // Return a slimmed-down list of {id, name} objects sorted alphabetically.
+  // Powers the Artist filter dropdown on the gallery page.
   function getArtistList() {
     return artists
       .map(function(a) { return { id: a.id, name: a.name }; })
       .sort(function(a, b) { return a.name.localeCompare(b.name); });
   }
 
+  // Return the artwork marked `featured: true`, or the first artwork as a fallback.
+  // Drives the homepage hero card.
   function getFeaturedArtwork() {
     for (var i = 0; i < artworks.length; i++) {
       if (artworks[i].featured) {
@@ -562,6 +643,9 @@ var KaysData = (function () {
     return artworks[0];
   }
 
+  // Return a sorted, de-duplicated list of every decade present in the catalog.
+  // Powers the Decade filter dropdown on the gallery page.
+  // The `seen` object is used as a set — keys we've already added.
   function getDecades() {
     var seen = {};
     var result = [];
@@ -575,10 +659,12 @@ var KaysData = (function () {
     return result.sort();
   }
 
+  // Return a copy of the full exhibitions list (so callers can't mutate ours).
   function getExhibitions() {
     return exhibitions.slice();
   }
 
+  // Find an exhibition by its id. Used on the exhibition detail page.
   function getExhibition(id) {
     for (var i = 0; i < exhibitions.length; i++) {
       if (exhibitions[i].id === id) {
@@ -588,6 +674,8 @@ var KaysData = (function () {
     return null;
   }
 
+  // Find every exhibition that includes a given artwork.
+  // Used to show "Featured in Exhibitions" links on the artwork detail page.
   function getExhibitionsByArtwork(artworkId) {
     var results = [];
     for (var i = 0; i < exhibitions.length; i++) {
@@ -598,6 +686,8 @@ var KaysData = (function () {
     return results;
   }
 
+  // Find every exhibition that includes a given artist.
+  // Used to show the "Exhibitions" section on the artist profile page.
   function getExhibitionsByArtist(artistId) {
     var results = [];
     for (var i = 0; i < exhibitions.length; i++) {
@@ -608,7 +698,10 @@ var KaysData = (function () {
     return results;
   }
 
-  /* ---- Public API ---- */
+  /* ---- Public API ----
+     The object below is what the rest of the website sees as `KaysData`.
+     Anything NOT listed here is private to this file. To expose a new
+     helper, add it both above and to this return object. */
   return {
     artists: artists,
     artworks: artworks,

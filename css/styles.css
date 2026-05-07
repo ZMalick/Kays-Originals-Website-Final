@@ -1,9 +1,31 @@
 /* =============================================
    Kay's Originals — Main Stylesheet
-   Editorial gallery aesthetic with bold typography
+   ---------------------------------------------
+   Single stylesheet for the whole site. Organized in major sections
+   (Reset, Nav, Hero, Cards, Gallery, Pages, Footer, Responsive,
+   etc.) — search for the "===" banners to jump between them.
+
+   Two key conventions to know about:
+
+     1. Color palette + fonts live in `:root` below as CSS custom
+        properties (a.k.a. CSS variables). NEVER hardcode a color or
+        font in the rest of the file — use var(--charcoal), var(--gold),
+        var(--font-heading), etc. so changes stay in one place.
+
+     2. Animations only transition `transform` and `opacity` (not
+        `all`), since those are GPU-accelerated and don't trigger
+        layout. Keeps the site feeling smooth on lower-end laptops.
+
+   Editorial gallery aesthetic — bold serif headings, clean sans-serif
+   body, generous whitespace, gold frame accents on artwork cards.
    ============================================= */
 
-/* --- Reset & Base --- */
+/* --- Reset & Base ---
+   Strip every browser's built-in margins/paddings so we start from
+   the same baseline. `box-sizing: border-box` makes width/padding
+   math intuitive (a 300px element STAYS 300px even with padding).
+   The :root block below defines all the colors, fonts, and z-index
+   tiers used throughout the rest of this file. */
 *,
 *::before,
 *::after {
@@ -12,29 +34,35 @@
   box-sizing: border-box;
 }
 
+/* The brand palette. Every color used anywhere on the site comes
+   from this list — that way Kay (or a future team) can change a hue
+   in one place and have it ripple everywhere automatically.
+   No yellow per Kay's preferences; no brown/beige per the brief. */
 :root {
-  --charcoal: #1e1e1e;
-  --charcoal-light: #2d2d2d;
-  --blue: #1a8fc4;
-  --blue-dark: #15749f;
-  --coral: #e05252;
-  --teal: #2a9d8f;
-  --gold: #e8b84b;
-  --gold-muted: #d4a73c;
+  --charcoal: #1e1e1e;        /* Primary text, dark nav */
+  --charcoal-light: #2d2d2d;  /* Slightly lifted dark surface */
+  --blue: #1a8fc4;            /* Primary accent (links, primary buttons) */
+  --blue-dark: #15749f;       /* Hover state for blue */
+  --coral: #e05252;           /* Warm secondary accent */
+  --teal: #2a9d8f;            /* Cool secondary accent */
+  --gold: #e8b84b;            /* Frame accents, featured badge */
+  --gold-muted: #d4a73c;      /* Darker gold for hover/contrast */
   --white: #ffffff;
-  --off-white: #fafaf8;
-  --light-gray: #f3f2ef;
-  --mid-gray: #b0aca5;
-  --text-secondary: #6b6760;
+  --off-white: #fafaf8;       /* Page background — softer than pure white */
+  --light-gray: #f3f2ef;      /* Section dividers, card backgrounds */
+  --mid-gray: #b0aca5;        /* Subtle borders */
+  --text-secondary: #6b6760;  /* De-emphasized text (captions, meta) */
 
+  /* Typography. var(--font-heading) on h1-h4, var(--font-body) on the rest. */
   --font-heading: 'DM Serif Display', Georgia, serif;
   --font-body: 'Outfit', system-ui, sans-serif;
 
-  --nav-height: 80px;
-  --section-gap: 3rem;
-  --color-bar-height: 3px;
+  --nav-height: 80px;        /* Used to offset content under the sticky nav */
+  --section-gap: 3rem;        /* Default vertical breathing room between sections */
+  --color-bar-height: 3px;    /* Thin gradient strip above the nav */
 
-  /* z-index scale */
+  /* z-index scale — higher = on top. Centralized so the layering
+     stays predictable and we don't end up with rogue z-index: 9999. */
   --z-nav: 1000;
   --z-nav-backdrop: 998;
   --z-hamburger: 1001;
@@ -72,7 +100,11 @@ ul {
   list-style: none;
 }
 
-/* --- Scroll reveal --- */
+/* --- Scroll reveal ---
+   Elements with class="reveal" start invisible and slightly shifted
+   down. JS adds the `.visible` class when they scroll into view,
+   triggering the smooth fade-up. Stagger rules below add 80ms delays
+   between sibling cards so a row reveals as a wave, not all at once. */
 .reveal {
   opacity: 0;
   transform: translateY(32px);
@@ -92,7 +124,10 @@ ul {
 .artwork-grid .reveal:nth-child(5) { transition-delay: 0.32s; }
 .artwork-grid .reveal:nth-child(6) { transition-delay: 0.4s; }
 
-/* --- Utility --- */
+/* --- Utility ---
+   Generic helpers used across sections. `.section-inner` is the page
+   width container — applied to most top-level sections so their
+   content lines up to the same 1240px max width with consistent gutters. */
 .section-inner {
   max-width: 1240px;
   margin: 0 auto;
@@ -125,7 +160,12 @@ ul {
   margin-top: 1.5rem;
 }
 
-/* --- Buttons --- */
+/* --- Buttons ---
+   Two main button styles:
+     .btn-primary    — solid blue, the main call-to-action
+     .btn-secondary  — outlined, lower-emphasis
+   Both share the .btn base styles for consistent padding, font, and
+   subtle hover lift. Disabled state lives further down. */
 .btn {
   display: inline-block;
   padding: 1.05rem 2.6rem;
@@ -183,7 +223,11 @@ ul {
   box-shadow: 0 8px 24px rgba(42, 157, 143, 0.3);
 }
 
-/* --- Focus-visible accessibility --- */
+/* --- Focus-visible accessibility ---
+   Keyboard users (tab navigation) need a clear focus outline so they
+   can see where they are. `:focus-visible` is the modern selector
+   that ONLY shows the outline for keyboard focus, not mouse clicks
+   — so the page doesn't get a distracting ring on every click. */
 a:focus-visible,
 button:focus-visible,
 input:focus-visible,
@@ -218,6 +262,11 @@ textarea:focus-visible {
 
 /* =============================================
    1. STICKY NAVIGATION
+   ---------------------------------------------
+   The dark bar that stays pinned to the top of the viewport on every
+   page. Includes the logo + slogan on the left, the link list on the
+   right, and the hamburger button (which only shows on mobile).
+   The "Artwork" item is a dropdown — sub-styles further down.
    ============================================= */
 .main-nav {
   position: sticky;
@@ -415,6 +464,11 @@ textarea:focus-visible {
 
 /* =============================================
    2. HERO CAROUSEL
+   ---------------------------------------------
+   Slideshow at the top of pages that use it (legacy — current
+   homepage uses the welcome layout instead). Crossfades between
+   images every 10 seconds. Kept around in case we restore the
+   slideshow look in the future.
    ============================================= */
 .hero-carousel {
   position: relative;
@@ -574,6 +628,11 @@ textarea:focus-visible {
 
 /* =============================================
    3. FEATURED ARTWORK GRID
+   ---------------------------------------------
+   The reusable artwork-card layout — image on top, info on bottom,
+   gold frame accent, hover lift. These styles power every grid of
+   artwork on the site (gallery page, "More by this artist", the
+   homepage strip, exhibition detail, etc.).
    ============================================= */
 .featured-artwork {
   padding: var(--section-gap) 0;
@@ -771,6 +830,9 @@ textarea:focus-visible {
 
 /* =============================================
    4. BROWSE BY CATEGORY
+   ---------------------------------------------
+   The Paintings / Sculptures / Sketches showcase tiles on the
+   homepage that link into pre-filtered gallery views.
    ============================================= */
 .browse-category {
   padding: 5rem 0 var(--section-gap);
@@ -867,6 +929,11 @@ textarea:focus-visible {
 
 /* =============================================
    5. ARTIST SPOTLIGHT
+   ---------------------------------------------
+   Artist card layout used on the artists.html listing page and the
+   "Featured Artists" sections of exhibitions. Includes the photo /
+   monogram avatar styles and the per-artist accent colors picked
+   off `data-monogram-id`.
    ============================================= */
 .artist-spotlight {
   padding: var(--section-gap) 0;
@@ -1041,6 +1108,10 @@ body[data-page="artists"] .artist-photo.artist-monogram {
 
 /* =============================================
    COMPACT ARTIST CARDS (artists listing page)
+   ---------------------------------------------
+   Tighter version of the artist cards used specifically on
+   artists.html, where we want more cards per row than the
+   homepage spotlight allows.
    ============================================= */
 body[data-page="artists"] .artist-filter-row {
   margin-bottom: 0.65rem;
@@ -1241,6 +1312,10 @@ body[data-page="artists"] .artist-link { display: none; }
 
 /* =============================================
    6. FOOTER
+   ---------------------------------------------
+   Dark footer at the bottom of every page. Three columns: brand
+   block (logo + tagline), Explore links, Company links, and a
+   Get-in-Touch contact column. Stacks vertically on mobile.
    ============================================= */
 .site-footer {
   background: var(--charcoal);
@@ -1348,6 +1423,9 @@ body[data-page="artists"] .artist-link { display: none; }
 
 /* =============================================
    7. COLOR BAR
+   ---------------------------------------------
+   Thin gradient strip above the nav. Pulls together the four brand
+   colors (blue → teal → coral) so the site feels like one piece.
    ============================================= */
 .color-bar {
   height: var(--color-bar-height);
@@ -1356,6 +1434,13 @@ body[data-page="artists"] .artist-link { display: none; }
 
 /* =============================================
    8. HOMEPAGE WELCOME
+   ---------------------------------------------
+   The big editorial welcome section on index.html: city label,
+   "Welcome to Kay's Originals" headline, intro copy, Kay's quote,
+   and the two primary CTAs. The featured artwork card sits to the
+   right on desktop and stacks under the text on mobile.
+   The min-height calc keeps this section tall enough that it always
+   fills the screen below the nav, no matter the viewport size.
    ============================================= */
 .home-welcome {
   min-height: calc(100vh - var(--nav-height) - var(--color-bar-height));
@@ -1779,6 +1864,10 @@ body[data-page="artists"] .artist-link { display: none; }
 
 /* =============================================
    10. SHARED PAGE STYLES
+   ---------------------------------------------
+   Building blocks reused across most subpages: the small page hero
+   (title + subtitle banner at the top of inner pages), section
+   headings, breadcrumbs, exhibition cross-link lists, etc.
    ============================================= */
 .page-hero {
   background: var(--light-gray);
@@ -1897,6 +1986,10 @@ body[data-page="artists"] .artist-link { display: none; }
 
 /* =============================================
    11. GALLERY PAGE
+   ---------------------------------------------
+   The browse-and-filter page (gallery.html). Filter pill bar across
+   the top, artist + decade dropdowns, and the responsive artwork
+   grid below. Also includes the modal popup that can open on a card click.
    ============================================= */
 .gallery-filters {
   display: flex;
@@ -1987,6 +2080,11 @@ body[data-page="artists"] .artist-link { display: none; }
 
 /* =============================================
    12. ARTWORK DETAIL PAGE
+   ---------------------------------------------
+   The full-page view of a single artwork (artwork.html). Two-column
+   layout with the large image on the left and title / artist / price /
+   medium / dimensions / description on the right. Below that: the
+   "Visit the gallery" card and the "More by this artist" grid.
    ============================================= */
 .detail-layout {
   display: grid;
@@ -2143,6 +2241,10 @@ body[data-page="artists"] .artist-link { display: none; }
 
 /* =============================================
    13. ARTIST PROFILE PAGE
+   ---------------------------------------------
+   The full-page view of a single artist (artist.html). Hero banner
+   with photo/monogram and bio on top, "Works in Gallery" grid, and
+   any associated exhibitions below.
    ============================================= */
 .profile-header {
   display: flex;
@@ -2178,6 +2280,9 @@ body[data-page="artists"] .artist-link { display: none; }
 
 /* =============================================
    14. ABOUT PAGE
+   ---------------------------------------------
+   Styles for about.html: founder quote, mission/values grid,
+   leadership cards, and the "Services" section.
    ============================================= */
 .about-hero {
   text-align: center;
@@ -2301,6 +2406,10 @@ body[data-page="artists"] .artist-link { display: none; }
 
 /* =============================================
    15. CONSIGNMENT PAGE
+   ---------------------------------------------
+   Styles for consignment.html ("For Artists"): the explainer
+   sections, terms, and call-to-action for artists who want to
+   show work at the gallery.
    ============================================= */
 .consignment-hero {
   text-align: center;
@@ -2400,6 +2509,10 @@ body[data-page="artists"] .artist-link { display: none; }
 
 /* =============================================
    16. CONTACT PAGE
+   ---------------------------------------------
+   Styles for contact.html: the two contact forms (Customer /
+   Artist), the gallery info card with hours and address, and the
+   tabs that switch between the two form modes.
    ============================================= */
 .contact-layout {
   display: grid;
@@ -2657,6 +2770,10 @@ body[data-page="contact"] .page-hero .hero-subtitle {
 
 /* =============================================
    17. EXHIBITIONS PAGE
+   ---------------------------------------------
+   Styles for both the exhibitions index (exhibitions.html) and the
+   single exhibition detail view (exhibition.html). Cards on the
+   index, full hero + artwork/artist grids on the detail page.
    ============================================= */
 .exhibitions-grid {
   display: grid;
@@ -2823,6 +2940,9 @@ body[data-page="contact"] .page-hero .hero-subtitle {
 
 /* =============================================
    18. FAQ PAGE
+   ---------------------------------------------
+   Styles for faq.html: the accordion list of question/answer pairs.
+   The +/- toggle is built with CSS and reacts to `aria-expanded`.
    ============================================= */
 .faq-section-heading {
   font-size: 0.72rem;
@@ -2880,7 +3000,10 @@ body[data-page="contact"] .page-hero .hero-subtitle {
   padding-bottom: 1.1rem;
 }
 
-/* ===== SKIP LINK ===== */
+/* ===== SKIP LINK =====
+   Accessibility: a hidden "Skip to main content" link that becomes
+   visible only when keyboard users tab to it. Lets them jump past
+   the long nav menu straight to the page content. */
 .skip-link {
   position: absolute;
   top: -100%;
@@ -2898,7 +3021,9 @@ body[data-page="contact"] .page-hero .hero-subtitle {
   top: 0.5rem;
 }
 
-/* ===== MOBILE MENU BACKDROP ===== */
+/* ===== MOBILE MENU BACKDROP =====
+   Dark overlay shown behind the slide-in mobile menu so the page
+   content visibly recedes. Clicking it closes the menu (handled in JS). */
 .nav-backdrop {
   display: none;
   position: fixed;
@@ -2910,7 +3035,9 @@ body[data-page="contact"] .page-hero .hero-subtitle {
   display: block;
 }
 
-/* ===== LIGHTBOX OVERLAY ===== */
+/* ===== LIGHTBOX OVERLAY =====
+   Full-screen dim overlay used when a visitor zooms into an artwork
+   detail image. Dimming lets the artwork stand out alone. */
 .lightbox {
   display: none;
   position: fixed;
@@ -2944,7 +3071,10 @@ body[data-page="contact"] .page-hero .hero-subtitle {
   cursor: zoom-in;
 }
 
-/* ===== EMPTY STATE ===== */
+/* ===== EMPTY STATE =====
+   Friendly "no results" panel shown when filters return zero
+   artwork or zero artists. Avoids leaving the user looking at
+   a blank section. */
 .empty-state {
   text-align: center;
   padding: 3rem 1rem;
@@ -3098,7 +3228,10 @@ body[data-page="contact"] .page-hero .hero-subtitle {
   color: var(--teal);
 }
 
-/* ===== PRINT ===== */
+/* ===== PRINT =====
+   When the user prints a page, hide the nav/footer/etc. and clean
+   up colors so it looks reasonable on paper. Adds the destination
+   URL after each link in parentheses (since they can't be clicked). */
 @media print {
   .main-nav, .site-footer, .hamburger, .skip-link,
   .nav-backdrop, .lightbox, .color-bar { display: none; }
@@ -3109,6 +3242,14 @@ body[data-page="contact"] .page-hero .hero-subtitle {
 
 /* =============================================
    RESPONSIVE
+   ---------------------------------------------
+   Media queries for narrower screens. Two main breakpoints:
+     - 1023px and below: tablet — switch from desktop nav to
+       hamburger, change the gallery grid to fewer columns.
+     - 640px and below: mobile — single-column layouts, smaller
+       headings, full-bleed cards.
+   The "Narrow desktop" block right below this banner handles the
+   awkward in-between widths where the nav would otherwise wrap.
    ============================================= */
 
 /* Narrow desktop — tighten nav so the Artwork dropdown doesn't crowd */
@@ -3736,7 +3877,10 @@ body[data-page="gallery"] .badge-new {
   }
 }
 
-/* ===== UTILITY CLASSES (extracted from inline styles) ===== */
+/* ===== UTILITY CLASSES (extracted from inline styles) =====
+   Small reusable helpers (text alignment, spacing, hidden/visible
+   toggles) that we use directly on HTML elements when one-off
+   tweaks would otherwise need a brand-new selector. */
 .tight-list {
   line-height: 1.8;
   margin-bottom: 2rem;
@@ -3810,7 +3954,10 @@ body[data-page="gallery"] .badge-new {
   }
 }
 
-/* ===== REDUCED MOTION ===== */
+/* ===== REDUCED MOTION =====
+   Accessibility: visitors who set "Reduce motion" in their OS get
+   near-zero animation durations. Some users get motion sickness
+   from animated UIs — this respects their preference. */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -3829,6 +3976,11 @@ body[data-page="gallery"] .badge-new {
 
 /* =============================================
    ITERATION 2c — QA FIX RULES
+   ---------------------------------------------
+   Late-stage tweaks that came out of QA review. Kept in a separate
+   section at the bottom so they win the cascade (later rules with
+   the same specificity override earlier ones), without us having
+   to touch the well-organized sections above.
    ============================================= */
 
 /* Permanent collection label on gallery cards */

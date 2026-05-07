@@ -1,4 +1,16 @@
 <!DOCTYPE html>
+<!--
+  ============================================================
+  pages/gallery.html — Browse all artwork
+  ------------------------------------------------------------
+  Main browse page. Three filter controls (category pills, artist
+  dropdown, decade dropdown) all narrow down the same grid.
+  The grid (#galleryGrid) is empty in the HTML — main.js fills it
+  in by reading from KaysData.artworks. Optional ?category= and
+  ?artistId= URL params preselect filters on load.
+  Clicking a card opens the quick-look modal at the bottom.
+  ============================================================
+-->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -60,6 +72,9 @@
   <!-- ===== GALLERY FILTERS ===== -->
   <section class="page-content">
     <div class="section-inner">
+      <!-- Filter row. data-category="" on the All pill is intentional —
+           it means "no category filter". The two <select> dropdowns
+           are populated by main.js (artist list and unique decades). -->
       <div class="gallery-filters" id="galleryFilters">
         <button class="filter-pill active" data-category="">All</button>
         <button class="filter-pill" data-category="painting">Paintings</button>
@@ -69,14 +84,20 @@
         <select id="galleryDecadeFilter" class="filter-select"><option value="">All Decades</option></select>
         <span id="resultsCount" class="results-count"></span>
       </div>
+      <!-- Empty container — main.js renders artwork cards into here. -->
       <div id="galleryGrid" class="artwork-grid"></div>
+      <!-- Shown only when filters return zero results (toggled by JS). -->
       <div id="galleryEmpty" class="empty-state" style="display:none;">
         <p>No artwork matches your current filters.</p>
         <a href="#" id="clearFilters">Clear filters</a>
       </div>
     </div>
   </section>
-  <!-- ===== ARTWORK MODAL ===== -->
+  <!-- ===== ARTWORK MODAL =====
+       Empty modal scaffolding. main.js fills in the title/image/artist/etc
+       when the user clicks a card. role="dialog" + aria-modal makes it
+       behave correctly for screen readers; `hidden` keeps it out of the
+       page flow until it's opened. -->
   <div id="artworkModal" class="artwork-modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
     <div class="modal-backdrop"></div>
     <div class="modal-panel">
@@ -138,6 +159,9 @@
     </div>
   </footer>
 
+  <!-- We're inside pages/, so detail-page links are relative ('') and
+       images need to step up one directory ('../'). main.js uses these
+       to build correct paths regardless of which page it runs on. -->
   <script>window.PAGE_BASE = ''; window.IMAGE_BASE = '../';</script>
   <script src="../js/data.js"></script>
   <script src="../js/main.js"></script>

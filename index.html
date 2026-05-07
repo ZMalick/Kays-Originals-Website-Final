@@ -1,21 +1,43 @@
 <!DOCTYPE html>
+<!--
+  ============================================================
+  index.html — Kay's Originals homepage
+  ------------------------------------------------------------
+  The site's front door. Two main sections:
+    1. Welcome — city label, headline, intro copy, Kay's quote,
+       primary CTAs, and the featured artwork card (filled in by JS).
+    2. Step Inside — invite-to-visit panel with the storefront photo.
+  All pages share the same nav and footer, just the middle <main>
+  changes. JavaScript runs from js/data.js + js/main.js at the bottom.
+  ============================================================
+-->
 <html lang="en">
 <head>
+  <!-- Standard browser metadata: encoding + responsive viewport. -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kay's Originals — Discover Original Art</title>
+  <!-- Preconnect tells the browser to start the handshake with Google
+       Fonts as early as possible so text renders faster. -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Brand fonts: DM Serif Display (headings) + Outfit (body). -->
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
   <link rel="icon" href="images/favicon.png" type="image/png">
+
+  <!-- SEO + social-share preview metadata. The og:* tags control how
+       this page looks when pasted into iMessage, Slack, Facebook, etc. -->
   <meta name="description" content="Discover bold, original artwork from visionary artists at Kay's Originals gallery in Austin, TX.">
   <meta property="og:title" content="Kay's Originals — Original Art, Personally Curated">
   <meta property="og:description" content="Discover bold, original artwork from visionary artists at Kay's Originals gallery in Austin, TX.">
   <meta property="og:image" content="images/KaysOrigLogo.png">
   <meta property="og:type" content="website">
 </head>
+
+<!-- data-page is read by main.js to highlight the right nav link. -->
 <body data-page="home">
+  <!-- Accessibility: keyboard users tab here first to skip past the nav. -->
   <a href="#main-content" class="skip-link">Skip to main content</a>
 
   <!-- ===== COLOR BAR & NAV ===== -->
@@ -49,6 +71,10 @@
   </nav>
 
   <main id="main-content">
+    <!-- ===== WELCOME (HERO) =====
+         Big editorial intro. The featured-artwork card on the right
+         is populated by main.js (it reads the artwork flagged
+         featured: true in data.js). -->
     <section class="home-welcome">
       <div class="home-welcome-inner">
         <div class="home-welcome-text">
@@ -125,6 +151,10 @@
     </div>
   </footer>
 
+  <!-- PAGE_BASE / IMAGE_BASE tell main.js how to build links and image
+       paths from this page's location. On index.html (project root),
+       links to detail pages need a "pages/" prefix and images need no
+       prefix. Pages inside pages/ flip these to '' and '../'. -->
   <script>window.PAGE_BASE = 'pages/'; window.IMAGE_BASE = '';</script>
   <script src="js/data.js"></script>
   <script src="js/main.js"></script>
